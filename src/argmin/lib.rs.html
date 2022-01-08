@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../argmin/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../argmin/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -542,50 +542,61 @@
 <span id="542">542</span>
 <span id="543">543</span>
 <span id="544">544</span>
-</pre><div class="example-wrap"><pre class="rust ">
-<span class="comment">// Copyright 2018-2020 argmin developers</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+</pre><pre class="rust"><code><span class="comment">// Copyright 2018-2020 argmin developers</span>
 <span class="comment">//</span>
 <span class="comment">// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or</span>
 <span class="comment">// http://apache.org/licenses/LICENSE-2.0&gt; or the MIT license &lt;LICENSE-MIT or</span>
 <span class="comment">// http://opensource.org/licenses/MIT&gt;, at your option. This file may not be</span>
 <span class="comment">// copied, modified, or distributed except according to those terms.</span>
 
-<span class="doccomment">//! A pure Rust optimization framework</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This crate offers a (work in progress) numerical optimization toolbox/framework written entirely</span>
-<span class="doccomment">//! in Rust. It is at the moment potentially very buggy. Please use with care and report any bugs</span>
-<span class="doccomment">//! you encounter. This crate is looking for contributors!</span>
+<span class="doccomment">//! argmin is a numerical optimization toolbox/framework written entirely in Rust.</span>
+<span class="doccomment">//! This crate is looking for contributors!</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [Documentation of most recent release](https://docs.rs/argmin/latest/argmin/)</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! [Documentation of master](https://argmin-rs.github.io/argmin/argmin/)</span>
+<span class="doccomment">//! [Documentation of main branch](https://argmin-rs.github.io/argmin/argmin/)</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Design goals</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! This crate&#39;s intention is to be useful to users as well as developers of optimization</span>
-<span class="doccomment">//! algorithms, meaning that it should be both easy to apply and easy to implement algorithms. In</span>
-<span class="doccomment">//! particular, as a developer of optimization algorithms you should not need to worry about</span>
-<span class="doccomment">//! usability features (such as logging, dealing with different types, setters and getters for</span>
-<span class="doccomment">//! certain common parameters, counting cost function and gradient evaluations, termination, and so</span>
-<span class="doccomment">//! on). Instead you can focus on implementing your algorithm.</span>
+<span class="doccomment">//! argmin aims at offering a wide range of optimization algorithms with a consistent interface,</span>
+<span class="doccomment">//! written purely in Rust. It comes with additional features such as checkpointing and observers</span>
+<span class="doccomment">//! which for instance allow one to log the progress of an optimization to screen or file.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! - Easy framework for the implementation of optimization algorithms: Implement a single iteration</span>
-<span class="doccomment">//!   of your method and let the framework do the rest. This leads to similar interfaces for</span>
-<span class="doccomment">//!   different solvers, making it easy for users.</span>
-<span class="doccomment">//! - Pure Rust implementations of a wide range of optimization methods: This avoids the need to</span>
-<span class="doccomment">//!   compile and interface C/C++/Fortran code.</span>
-<span class="doccomment">//! - Type-agnostic: Many problems require data structures that go beyond simple vectors to</span>
-<span class="doccomment">//!   represent the parameters. In argmin, everything is generic: All that needs to be done is</span>
-<span class="doccomment">//!   implementing certain traits on your data type. For common types, these traits are already</span>
-<span class="doccomment">//!   implemented.</span>
-<span class="doccomment">//! - Convenient: Easy and consistent logging of anything that may be important. Log to the</span>
-<span class="doccomment">//!   terminal, to a file or implement your own observers. Future plans include sending metrics to</span>
-<span class="doccomment">//!   databases and connecting to big data piplines.</span>
-<span class="doccomment">//! - Algorithm evaluation: Methods to assess the performance of an algorithm for different</span>
-<span class="doccomment">//!   parameter settings, problem classes, ...</span>
+<span class="doccomment">//! In addition it provides a framework for implementing iterative optimization algorithms in a</span>
+<span class="doccomment">//! convenient manner. Essentially, a single iteration of the algorithm needs to be implemented and</span>
+<span class="doccomment">//! everything else, such as handling termination, parameter vectors, gradients and Hessians, is</span>
+<span class="doccomment">//! taken care of by the library.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Since this crate is in a very early stage, so far most points are only partially implemented or</span>
-<span class="doccomment">//! remain future plans.</span>
+<span class="doccomment">//! This library makes heavy use of generics in order to be as type-agnostic as possible. It</span>
+<span class="doccomment">//! supports `nalgebra` and `ndarray` types via feature gates, but custom types can easily be made</span>
+<span class="doccomment">//! compatible with argmin by implementing the respective traits.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Future plans include functionality for easy performance evaluation of optimization algorithms,</span>
+<span class="doccomment">//! parallel computation of cost functions/gradients/Hessians as well as GPU support</span>
+<span class="doccomment">//! And of course more optimization algorithms!</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Contributing</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This crate is looking for contributors!</span>
+<span class="doccomment">//! Potential projects can be found in the</span>
+<span class="doccomment">//! [Github issues](https://github.com/argmin-rs/argmin/issues), but even if you have an idea that</span>
+<span class="doccomment">//! is not already mentioned there or if you found a bug, feel free to open a new issue.</span>
+<span class="doccomment">//! Besides adding optimization methods and new features, other contributions are also highly</span>
+<span class="doccomment">//! welcome, for instance improving performance, documentation, writing examples (with real world</span>
+<span class="doccomment">//! problems), developing tests, adding observers, implementing a C interface or</span>
+<span class="doccomment">//! [Python wrappers](https://github.com/argmin-rs/pyargmin).</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Algorithms</span>
 <span class="doccomment">//!</span>
@@ -611,11 +622,18 @@
 <span class="doccomment">//!   - [SR1-TrustRegion](solver/quasinewton/sr1_trustregion/struct.SR1TrustRegion.html)</span>
 <span class="doccomment">//! - [Gauss-Newton method](solver/gaussnewton/gaussnewton/struct.GaussNewton.html)</span>
 <span class="doccomment">//! - [Gauss-Newton method with linesearch](solver/gaussnewton/gaussnewton_linesearch/struct.GaussNewtonLS.html)</span>
+<span class="doccomment">//! - [Golden-section search](solver/goldensectionsearch/struct.GoldenSectionSearch.html)</span>
 <span class="doccomment">//! - [Landweber iteration](solver/landweber/struct.Landweber.html)</span>
 <span class="doccomment">//! - [Brent&#39;s method](solver/brent/struct.Brent.html)</span>
 <span class="doccomment">//! - [Nelder-Mead method](solver/neldermead/struct.NelderMead.html)</span>
 <span class="doccomment">//! - [Simulated Annealing](solver/simulatedannealing/struct.SimulatedAnnealing.html)</span>
 <span class="doccomment">//! - [Particle Swarm Optimization](solver/particleswarm/struct.ParticleSwarm.html)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Examples</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Examples for each solver can be found</span>
+<span class="doccomment">//! [here (current released version)](https://github.com/argmin-rs/argmin/tree/v0.4.7/examples) and</span>
+<span class="doccomment">//! [here (main branch)](https://github.com/argmin-rs/argmin/tree/main/examples).</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Usage</span>
 <span class="doccomment">//!</span>
@@ -623,16 +641,18 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```toml</span>
 <span class="doccomment">//! [dependencies]</span>
-<span class="doccomment">//! argmin = &quot;0.2.6&quot;</span>
+<span class="doccomment">//! argmin = &quot;0.4.7&quot;</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! ## Optional features (recommended)</span>
+<span class="doccomment">//! ## Optional features</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Recommended features</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! There are additional features which can be activated in `Cargo.toml`:</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```toml</span>
 <span class="doccomment">//! [dependencies]</span>
-<span class="doccomment">//! argmin = { version = &quot;0.2.6&quot;, features = [&quot;ctrlc&quot;, &quot;ndarrayl&quot;] }</span>
+<span class="doccomment">//! argmin = { version = &quot;0.4.7&quot;, features = [&quot;ctrlc&quot;, &quot;ndarrayl&quot;, &quot;nalgebral&quot;] }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! These may become default features in the future. Without these features compilation to</span>
@@ -641,13 +661,41 @@
 <span class="doccomment">//! - `ctrlc`: Uses the `ctrlc` crate to properly stop the optimization (and return the current best</span>
 <span class="doccomment">//!    result) after pressing Ctrl+C.</span>
 <span class="doccomment">//! - `ndarrayl`: Support for `ndarray`, `ndarray-linalg` and `ndarray-rand`.</span>
+<span class="doccomment">//! - `nalgebral`: Support for `nalgebra`.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! ## Running the tests</span>
+<span class="doccomment">//! Using the `ndarrayl` feature on Windows might require to explicitly choose the `ndarray-linalg`</span>
+<span class="doccomment">//! BLAS backend in the `Cargo.toml`:</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Running the tests requires the `ndarrayl` feature to be enabled:</span>
+<span class="doccomment">//! ```toml</span>
+<span class="doccomment">//! ndarray-linalg = { version = &quot;*&quot;, features = [&quot;intel-mkl-static&quot;] }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Experimental support for compiling to WebAssembly</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! When compiling to WASM, one of the following features must be used:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```toml</span>
+<span class="doccomment">//! argmin = { version = &quot;0.4.7&quot;, features = [&quot;wasm-bindgen&quot;] }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```toml</span>
+<span class="doccomment">//! argmin = { version = &quot;0.4.7&quot;, features = [&quot;stdweb&quot;] }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Note that WASM support is still experimental. Please report any issues you encounter when compiling argmin to WASM.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Running the tests and building the examples</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Running the tests requires the `ndarrayl` and feature to be enabled:</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```bash</span>
 <span class="doccomment">//! cargo test --features &quot;ndarrayl&quot;</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The examples require all features to be enabled:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```bash</span>
+<span class="doccomment">//! cargo test --features --all-features</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Defining a problem</span>
@@ -675,12 +723,10 @@
 <span class="doccomment">//! # extern crate argmin;</span>
 <span class="doccomment">//! # extern crate argmin_testfunctions;</span>
 <span class="doccomment">//! # extern crate ndarray;</span>
-<span class="doccomment">//! use argmin::testfunctions::{rosenbrock_2d, rosenbrock_2d_derivative, rosenbrock_2d_hessian};</span>
+<span class="doccomment">//! use argmin_testfunctions::{rosenbrock_2d, rosenbrock_2d_derivative, rosenbrock_2d_hessian};</span>
 <span class="doccomment">//! use argmin::prelude::*;</span>
-<span class="doccomment">//! use serde::{Serialize, Deserialize};</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! /// First, create a struct for your problem</span>
-<span class="doccomment">//! #[derive(Clone, Default, Serialize, Deserialize)]</span>
 <span class="doccomment">//! struct Rosenbrock {</span>
 <span class="doccomment">//!     a: f64,</span>
 <span class="doccomment">//!     b: f64,</span>
@@ -696,6 +742,8 @@
 <span class="doccomment">//!     type Hessian = Vec&lt;Vec&lt;f64&gt;&gt;;</span>
 <span class="doccomment">//!     /// Type of the Jacobian. Can be `()` if not needed.</span>
 <span class="doccomment">//!     type Jacobian = ();</span>
+<span class="doccomment">//!     /// Floating point precision</span>
+<span class="doccomment">//!     type Float = f64;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!     /// Apply the cost function to a parameter `p`</span>
 <span class="doccomment">//!     fn apply(&amp;self, p: &amp;Self::Param) -&gt; Result&lt;Self::Output, Error&gt; {</span>
@@ -727,13 +775,13 @@
 <span class="doccomment">//! ```rust</span>
 <span class="doccomment">//! # #![allow(unused_imports)]</span>
 <span class="doccomment">//! # extern crate argmin;</span>
+<span class="doccomment">//! # extern crate argmin_testfunctions;</span>
 <span class="doccomment">//! use argmin::prelude::*;</span>
 <span class="doccomment">//! use argmin::solver::gradientdescent::SteepestDescent;</span>
 <span class="doccomment">//! use argmin::solver::linesearch::MoreThuenteLineSearch;</span>
-<span class="doccomment">//! # use argmin::testfunctions::{rosenbrock_2d, rosenbrock_2d_derivative};</span>
-<span class="doccomment">//! # use serde::{Deserialize, Serialize};</span>
+<span class="doccomment">//! # use argmin_testfunctions::{rosenbrock_2d, rosenbrock_2d_derivative};</span>
+<span class="doccomment">//! # use instant;</span>
 <span class="doccomment">//! #</span>
-<span class="doccomment">//! # #[derive(Clone, Default, Serialize, Deserialize)]</span>
 <span class="doccomment">//! # struct Rosenbrock {</span>
 <span class="doccomment">//! #     a: f64,</span>
 <span class="doccomment">//! #     b: f64,</span>
@@ -744,6 +792,7 @@
 <span class="doccomment">//! #     type Output = f64;</span>
 <span class="doccomment">//! #     type Hessian = ();</span>
 <span class="doccomment">//! #     type Jacobian = ();</span>
+<span class="doccomment">//! #     type Float = f64;</span>
 <span class="doccomment">//! #</span>
 <span class="doccomment">//! #     fn apply(&amp;self, p: &amp;Self::Param) -&gt; Result&lt;Self::Output, Error&gt; {</span>
 <span class="doccomment">//! #         Ok(rosenbrock_2d(p, self.a, self.b))</span>
@@ -778,7 +827,7 @@
 <span class="doccomment">//!     .run()?;</span>
 <span class="doccomment">//! #</span>
 <span class="doccomment">//! #     // Wait a second (lets the logger flush everything first)</span>
-<span class="doccomment">//! #     std::thread::sleep(std::time::Duration::from_secs(1));</span>
+<span class="doccomment">//! #     std::thread::sleep(instant::Duration::from_secs(1));</span>
 <span class="doccomment">//!  </span>
 <span class="doccomment">//! // print result</span>
 <span class="doccomment">//! println!(&quot;{}&quot;, res);</span>
@@ -787,7 +836,7 @@
 <span class="doccomment">//! #</span>
 <span class="doccomment">//! # fn main() {</span>
 <span class="doccomment">//! #     if let Err(ref e) = run() {</span>
-<span class="doccomment">//! #         println!(&quot;{} {}&quot;, e.as_fail(), e.backtrace());</span>
+<span class="doccomment">//! #         println!(&quot;{}&quot;, e);</span>
 <span class="doccomment">//! #         std::process::exit(1);</span>
 <span class="doccomment">//! #     }</span>
 <span class="doccomment">//! # }</span>
@@ -812,13 +861,12 @@
 <span class="doccomment">//! ```rust</span>
 <span class="doccomment">//! # #![allow(unused_imports)]</span>
 <span class="doccomment">//! # extern crate argmin;</span>
+<span class="doccomment">//! # extern crate argmin_testfunctions;</span>
 <span class="doccomment">//! # use argmin::prelude::*;</span>
 <span class="doccomment">//! # use argmin::solver::gradientdescent::SteepestDescent;</span>
 <span class="doccomment">//! # use argmin::solver::linesearch::MoreThuenteLineSearch;</span>
-<span class="doccomment">//! # use argmin::testfunctions::{rosenbrock_2d, rosenbrock_2d_derivative};</span>
-<span class="doccomment">//! # use serde::{Deserialize, Serialize};</span>
+<span class="doccomment">//! # use argmin_testfunctions::{rosenbrock_2d, rosenbrock_2d_derivative};</span>
 <span class="doccomment">//! #</span>
-<span class="doccomment">//! # #[derive(Clone, Default, Serialize, Deserialize)]</span>
 <span class="doccomment">//! # struct Rosenbrock {</span>
 <span class="doccomment">//! #     a: f64,</span>
 <span class="doccomment">//! #     b: f64,</span>
@@ -829,6 +877,7 @@
 <span class="doccomment">//! #     type Output = f64;</span>
 <span class="doccomment">//! #     type Hessian = ();</span>
 <span class="doccomment">//! #     type Jacobian = ();</span>
+<span class="doccomment">//! #     type Float = f64;</span>
 <span class="doccomment">//! #</span>
 <span class="doccomment">//! #     fn apply(&amp;self, p: &amp;Self::Param) -&gt; Result&lt;Self::Output, Error&gt; {</span>
 <span class="doccomment">//! #         Ok(rosenbrock_2d(p, self.a, self.b))</span>
@@ -868,7 +917,7 @@
 <span class="doccomment">//! #</span>
 <span class="doccomment">//! # fn main() {</span>
 <span class="doccomment">//! #     if let Err(ref e) = run() {</span>
-<span class="doccomment">//! #         println!(&quot;{} {}&quot;, e.as_fail(), e.backtrace());</span>
+<span class="doccomment">//! #         println!(&quot;{}&quot;, e);</span>
 <span class="doccomment">//! #         std::process::exit(1);</span>
 <span class="doccomment">//! #     }</span>
 <span class="doccomment">//! # }</span>
@@ -891,13 +940,14 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```rust</span>
 <span class="doccomment">//! # extern crate argmin;</span>
+<span class="doccomment">//! # extern crate argmin_testfunctions;</span>
 <span class="doccomment">//! # use argmin::prelude::*;</span>
 <span class="doccomment">//! # use argmin::solver::landweber::*;</span>
-<span class="doccomment">//! # use argmin::testfunctions::{rosenbrock_2d, rosenbrock_2d_derivative};</span>
-<span class="doccomment">//! # use argmin_core::Error;</span>
-<span class="doccomment">//! # use serde::{Deserialize, Serialize};</span>
+<span class="doccomment">//! # use argmin_testfunctions::{rosenbrock_2d, rosenbrock_2d_derivative};</span>
+<span class="doccomment">//! # use argmin::core::Error;</span>
+<span class="doccomment">//! # use instant;</span>
 <span class="doccomment">//! #</span>
-<span class="doccomment">//! # #[derive(Clone, Default, Serialize, Deserialize)]</span>
+<span class="doccomment">//! # #[derive(Default)]</span>
 <span class="doccomment">//! # struct Rosenbrock {}</span>
 <span class="doccomment">//! #</span>
 <span class="doccomment">//! # impl ArgminOp for Rosenbrock {</span>
@@ -905,6 +955,7 @@
 <span class="doccomment">//! #     type Output = f64;</span>
 <span class="doccomment">//! #     type Hessian = ();</span>
 <span class="doccomment">//! #     type Jacobian = ();</span>
+<span class="doccomment">//! #     type Float = f64;</span>
 <span class="doccomment">//! #</span>
 <span class="doccomment">//! #     fn apply(&amp;self, p: &amp;Vec&lt;f64&gt;) -&gt; Result&lt;f64, Error&gt; {</span>
 <span class="doccomment">//! #         Ok(rosenbrock_2d(p, 1.0, 100.0))</span>
@@ -918,13 +969,12 @@
 <span class="doccomment">//! # fn run() -&gt; Result&lt;(), Error&gt; {</span>
 <span class="doccomment">//! #     // define inital parameter vector</span>
 <span class="doccomment">//! #     let init_param: Vec&lt;f64&gt; = vec![1.2, 1.2];</span>
-<span class="doccomment">//! #     let operator = Rosenbrock {};</span>
 <span class="doccomment">//! #</span>
 <span class="doccomment">//! #     let iters = 35;</span>
 <span class="doccomment">//! #     let solver = Landweber::new(0.001);</span>
 <span class="doccomment">//! #</span>
-<span class="doccomment">//! let res = Executor::from_checkpoint(&quot;.checkpoints/optim.arg&quot;)</span>
-<span class="doccomment">//!     .unwrap_or(Executor::new(operator, solver, init_param))</span>
+<span class="doccomment">//! let res = Executor::from_checkpoint(&quot;.checkpoints/optim.arg&quot;, Rosenbrock {})</span>
+<span class="doccomment">//!     .unwrap_or(Executor::new(Rosenbrock {}, solver, init_param))</span>
 <span class="doccomment">//!     .max_iters(iters)</span>
 <span class="doccomment">//!     .checkpoint_dir(&quot;.checkpoints&quot;)</span>
 <span class="doccomment">//!     .checkpoint_name(&quot;optim&quot;)</span>
@@ -932,14 +982,14 @@
 <span class="doccomment">//!     .run()?;</span>
 <span class="doccomment">//! #</span>
 <span class="doccomment">//! #     // Wait a second (lets the logger flush everything before printing to screen again)</span>
-<span class="doccomment">//! #     std::thread::sleep(std::time::Duration::from_secs(1));</span>
+<span class="doccomment">//! #     std::thread::sleep(instant::Duration::from_secs(1));</span>
 <span class="doccomment">//! #     println!(&quot;{}&quot;, res);</span>
 <span class="doccomment">//! #     Ok(())</span>
 <span class="doccomment">//! # }</span>
 <span class="doccomment">//! #</span>
 <span class="doccomment">//! # fn main() {</span>
 <span class="doccomment">//! #     if let Err(ref e) = run() {</span>
-<span class="doccomment">//! #         println!(&quot;{} {}&quot;, e.as_fail(), e.backtrace());</span>
+<span class="doccomment">//! #         println!(&quot;{}&quot;, e);</span>
 <span class="doccomment">//! #     }</span>
 <span class="doccomment">//! # }</span>
 <span class="doccomment">//! ```</span>
@@ -969,24 +1019,25 @@
 <span class="doccomment">//! // solver. Note that this does not include parameter vectors, gradients, Hessians, cost</span>
 <span class="doccomment">//! // function values and so on, as those will be handled by the `Executor`.</span>
 <span class="doccomment">//! #[derive(Serialize, Deserialize)]</span>
-<span class="doccomment">//! pub struct Landweber {</span>
+<span class="doccomment">//! pub struct Landweber&lt;F&gt; {</span>
 <span class="doccomment">//!     /// omega</span>
-<span class="doccomment">//!     omega: f64,</span>
+<span class="doccomment">//!     omega: F,</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! impl Landweber {</span>
+<span class="doccomment">//! impl&lt;F&gt; Landweber&lt;F&gt; {</span>
 <span class="doccomment">//!     /// Constructor</span>
-<span class="doccomment">//!     pub fn new(omega: f64) -&gt; Self {</span>
+<span class="doccomment">//!     pub fn new(omega: F) -&gt; Self {</span>
 <span class="doccomment">//!         Landweber { omega }</span>
 <span class="doccomment">//!     }</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! impl&lt;O&gt; Solver&lt;O&gt; for Landweber</span>
+<span class="doccomment">//! impl&lt;O, F&gt; Solver&lt;O&gt; for Landweber&lt;F&gt;</span>
 <span class="doccomment">//! where</span>
 <span class="doccomment">//!     // `O` always needs to implement `ArgminOp`</span>
-<span class="doccomment">//!     O: ArgminOp,</span>
+<span class="doccomment">//!     O: ArgminOp&lt;Float = F&gt;,</span>
 <span class="doccomment">//!     // `O::Param` needs to implement `ArgminScaledSub` because of the update formula</span>
-<span class="doccomment">//!     O::Param: ArgminScaledSub&lt;O::Param, f64, O::Param&gt;,</span>
+<span class="doccomment">//!     O::Param: ArgminScaledSub&lt;O::Param, O::Float, O::Param&gt;,</span>
+<span class="doccomment">//!     F: ArgminFloat,</span>
 <span class="doccomment">//! {</span>
 <span class="doccomment">//!     // This gives the solver a name which will be used for logging</span>
 <span class="doccomment">//!     const NAME: &amp;&#39;static str = &quot;Landweber&quot;;</span>
@@ -1016,54 +1067,36 @@
 <span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! # TODOs</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!   * More optimization methods</span>
-<span class="doccomment">//!   * Automatic differentiation</span>
-<span class="doccomment">//!   * Parallelization</span>
-<span class="doccomment">//!   * Tests</span>
-<span class="doccomment">//!   * Evaluation on real problems</span>
-<span class="doccomment">//!   * Evaluation framework</span>
-<span class="doccomment">//!   * Documentation &amp; Tutorials</span>
-<span class="doccomment">//!   * C interface</span>
-<span class="doccomment">//!   * Python wrapper</span>
-<span class="doccomment">//!   * Solver and problem definition via a config file</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Please open an [issue](https://github.com/argmin-rs/argmin/issues) if you want to contribute!</span>
-<span class="doccomment">//! Any help is appreciated!</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # License</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Licensed under either of</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!   * Apache License, Version 2.0,</span>
-<span class="doccomment">//!     ([LICENSE-APACHE](https://github.com/argmin-rs/argmin/blob/master/LICENSE-APACHE) or</span>
-<span class="doccomment">//!     http://www.apache.org/licenses/LICENSE-2.0)</span>
-<span class="doccomment">//!   * MIT License ([LICENSE-MIT](https://github.com/argmin-rs/argmin/blob/master/LICENSE-MIT) or</span>
-<span class="doccomment">//!     http://opensource.org/licenses/MIT)</span>
+<span class="doccomment">//!     ([LICENSE-APACHE](https://github.com/argmin-rs/argmin/blob/main/LICENSE-APACHE) or</span>
+<span class="doccomment">//!     &lt;http://www.apache.org/licenses/LICENSE-2.0&gt;)</span>
+<span class="doccomment">//!   * MIT License ([LICENSE-MIT](https://github.com/argmin-rs/argmin/blob/main/LICENSE-MIT) or</span>
+<span class="doccomment">//!     &lt;http://opensource.org/licenses/MIT&gt;)</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! at your option.</span>
-<span class="doccomment">//!</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ## Contribution</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion</span>
 <span class="doccomment">//! in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above,</span>
 <span class="doccomment">//! without any additional terms or conditions.</span>
-<span class="comment">// //! argmin = { git = &quot;https://github.com/argmin-rs/argmin.git&quot;, branch = &quot;master&quot;}</span>
-<span class="comment">// //! argmin = { git = &quot;https://github.com/argmin-rs/argmin.git&quot;,</span>
-<span class="comment">// //!            branch = &quot;master&quot;,</span>
-<span class="comment">// //!            features = [&quot;ctrlc&quot;, &quot;ndarrayl&quot;] }</span>
 
 <span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">unused_attributes</span>)]</span>
 <span class="comment">// Explicitly disallow EQ comparison of floats. (This clippy lint is denied by default; however,</span>
 <span class="comment">// this is just to make sure that it will always stay this way.)</span>
-<span class="attribute">#![<span class="ident">deny</span>(<span class="ident">clippy</span>::<span class="ident">float_cmp</span>)]</span>
+<span class="attribute">#![<span class="ident">deny</span>(<span class="ident">clippy::float_cmp</span>)]</span>
 
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">argmin_core</span>;
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">argmin_testfunctions</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rand</span>;
+
+<span class="doccomment">/// Core functionality</span>
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">core</span>;
 
 <span class="doccomment">/// Definition of all relevant traits and types</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">prelude</span>;
@@ -1075,17 +1108,9 @@
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">mod</span> <span class="ident">macros</span>;
 
-<span class="kw">use</span> <span class="ident">argmin_core</span>::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// Testfunctions</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">testfunctions</span> {
-    <span class="doccomment">//! # Testfunctions</span>
-    <span class="doccomment">//!</span>
-    <span class="doccomment">//! Reexport of `argmin-testfunctions`.</span>
-    <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">argmin_testfunctions</span>::<span class="kw-2">*</span>;
-}
-
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span>;
-</pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "argmin";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</code></pre></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="argmin" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
+    <script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script>
+</body></html>
