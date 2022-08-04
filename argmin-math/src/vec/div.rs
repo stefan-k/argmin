@@ -6,82 +6,35 @@
 // copied, modified, or distributed except according to those terms.
 
 use crate::ArgminDiv;
-use num_complex::Complex;
 
-macro_rules! make_div {
-    ($t:ty) => {
-        impl ArgminDiv<$t, Vec<$t>> for Vec<$t> {
-            #[inline]
-            fn div(&self, other: &$t) -> Vec<$t> {
-                self.iter().map(|a| a / other).collect()
-            }
-        }
-
-        impl ArgminDiv<Vec<$t>, Vec<$t>> for $t {
-            #[inline]
-            fn div(&self, other: &Vec<$t>) -> Vec<$t> {
-                other.iter().map(|a| self / a).collect()
-            }
-        }
-
-        impl ArgminDiv<Vec<$t>, Vec<$t>> for Vec<$t> {
-            #[inline]
-            fn div(&self, other: &Vec<$t>) -> Vec<$t> {
-                let n1 = self.len();
-                let n2 = other.len();
-                assert!(n1 > 0);
-                assert!(n2 > 0);
-                assert_eq!(n1, n2);
-                self.iter().zip(other.iter()).map(|(a, b)| a / b).collect()
-            }
-        }
-
-        impl ArgminDiv<Vec<Vec<$t>>, Vec<Vec<$t>>> for Vec<Vec<$t>> {
-            #[inline]
-            fn div(&self, other: &Vec<Vec<$t>>) -> Vec<Vec<$t>> {
-                let sr = self.len();
-                let or = other.len();
-                assert!(sr > 0);
-                // implicitly, or > 0
-                assert_eq!(sr, or);
-                let sc = self[0].len();
-                self.iter()
-                    .zip(other.iter())
-                    .map(|(a, b)| {
-                        assert_eq!(a.len(), sc);
-                        assert_eq!(b.len(), sc);
-                        <Vec<$t> as ArgminDiv<Vec<$t>, Vec<$t>>>::div(&a, &b)
-                    })
-                    .collect()
-            }
-        }
-    };
+impl<T: ArgminDiv<T, T>> ArgminDiv<T, Vec<T>> for Vec<T> {
+    #[inline]
+    fn div(&self, other: &T) -> Vec<T> {
+        self.iter().map(|a| a.div(other)).collect()
+    }
 }
 
-make_div!(isize);
-make_div!(usize);
-make_div!(i8);
-make_div!(u8);
-make_div!(i16);
-make_div!(u16);
-make_div!(i32);
-make_div!(u32);
-make_div!(i64);
-make_div!(u64);
-make_div!(f32);
-make_div!(f64);
-make_div!(Complex<isize>);
-make_div!(Complex<usize>);
-make_div!(Complex<i8>);
-make_div!(Complex<u8>);
-make_div!(Complex<i16>);
-make_div!(Complex<u16>);
-make_div!(Complex<i32>);
-make_div!(Complex<u32>);
-make_div!(Complex<i64>);
-make_div!(Complex<u64>);
-make_div!(Complex<f32>);
-make_div!(Complex<f64>);
+impl<T: ArgminDiv<T, T>> ArgminDiv<Vec<T>, Vec<T>> for T {
+    #[inline]
+    fn div(&self, other: &Vec<T>) -> Vec<T> {
+        other.iter().map(|a| self.div(a)).collect()
+    }
+}
+
+impl<T: ArgminDiv<T, T>> ArgminDiv<Vec<T>, Vec<T>> for Vec<T> {
+    #[inline]
+    fn div(&self, other: &Vec<T>) -> Vec<T> {
+        let n1 = self.len();
+        let n2 = other.len();
+        assert!(n1 > 0);
+        assert!(n2 > 0);
+        assert_eq!(n1, n2);
+        self.iter()
+            .zip(other.iter())
+            .map(|(a, b)| a.div(b))
+            .collect()
+    }
+}
 
 #[cfg(test)]
 mod tests {

@@ -7,83 +7,58 @@
 
 use crate::ArgminAdd;
 
-macro_rules! make_add {
-    ($t:ty) => {
-        impl ArgminAdd<$t, Vec<$t>> for Vec<$t> {
-            #[inline]
-            fn add(&self, other: &$t) -> Vec<$t> {
-                self.iter().map(|a| a + other).collect()
-            }
-        }
-
-        impl ArgminAdd<Vec<$t>, Vec<$t>> for $t {
-            #[inline]
-            fn add(&self, other: &Vec<$t>) -> Vec<$t> {
-                other.iter().map(|a| a + self).collect()
-            }
-        }
-
-        impl ArgminAdd<Vec<$t>, Vec<$t>> for Vec<$t> {
-            #[inline]
-            fn add(&self, other: &Vec<$t>) -> Vec<$t> {
-                let n1 = self.len();
-                let n2 = other.len();
-                assert!(n1 > 0);
-                assert!(n2 > 0);
-                assert_eq!(n1, n2);
-                self.iter().zip(other.iter()).map(|(a, b)| a + b).collect()
-            }
-        }
-
-        impl ArgminAdd<Vec<Vec<$t>>, Vec<Vec<$t>>> for Vec<Vec<$t>> {
-            #[inline]
-            fn add(&self, other: &Vec<Vec<$t>>) -> Vec<Vec<$t>> {
-                let sr = self.len();
-                let or = other.len();
-                assert!(sr > 0);
-                // implicitly, or > 0
-                assert_eq!(sr, or);
-                let sc = self[0].len();
-                self.iter()
-                    .zip(other.iter())
-                    .map(|(a, b)| {
-                        assert_eq!(a.len(), sc);
-                        assert_eq!(b.len(), sc);
-                        <Vec<$t> as ArgminAdd<Vec<$t>, Vec<$t>>>::add(&a, &b)
-                    })
-                    .collect()
-            }
-        }
-
-        impl ArgminAdd<$t, Vec<Vec<$t>>> for Vec<Vec<$t>> {
-            #[inline]
-            fn add(&self, other: &$t) -> Vec<Vec<$t>> {
-                let sr = self.len();
-                assert!(sr > 0);
-                let sc = self[0].len();
-                self.iter()
-                    .map(|a| {
-                        assert_eq!(a.len(), sc);
-                        <Vec<$t> as ArgminAdd<$t, Vec<$t>>>::add(&a, &other)
-                    })
-                    .collect()
-            }
-        }
-    };
+impl<T: ArgminAdd<T, T>> ArgminAdd<T, Vec<T>> for Vec<T> {
+    /// Adds a `T` to a `Vec<T>`
+    ///
+    /// Returns an empty `Vec` if `self` is empty.
+    #[inline]
+    fn add(&self, other: &T) -> Vec<T> {
+        self.iter().map(|a| a.add(other)).collect()
+    }
 }
 
-make_add!(isize);
-make_add!(usize);
-make_add!(i8);
-make_add!(i16);
-make_add!(i32);
-make_add!(i64);
-make_add!(u8);
-make_add!(u16);
-make_add!(u32);
-make_add!(u64);
-make_add!(f32);
-make_add!(f64);
+impl<T: ArgminAdd<T, T>> ArgminAdd<Vec<T>, Vec<T>> for T {
+    /// Adds a `Vec<T>` to a `T`
+    ///
+    /// Returns an empty `Vec` if `other` is empty.
+    #[inline]
+    fn add(&self, other: &Vec<T>) -> Vec<T> {
+        other.iter().map(|a| a.add(self)).collect()
+    }
+}
+
+impl<T: ArgminAdd<T, T>> ArgminAdd<Vec<T>, Vec<T>> for Vec<T> {
+    /// Adds two `Vec<T>`.
+    ///
+    /// Panics if the `Vec`s are not of the same length.
+    #[inline]
+    fn add(&self, other: &Vec<T>) -> Vec<T> {
+        assert_eq!(self.len(), other.len());
+        self.iter()
+            .zip(other.iter())
+            .map(|(a, b)| a.add(b))
+            .collect()
+    }
+}
+
+impl<T: ArgminAdd<T, T>> ArgminAdd<T, Vec<Vec<T>>> for Vec<Vec<T>> {
+    /// Adds a `T` to a `Vec<Vec<T>>` (a sort-of matrix).
+    ///
+    /// Panics if `self` is an empty `Vec` or if the `Vec`s on the second layer are not of the same
+    /// length.
+    #[inline]
+    fn add(&self, other: &T) -> Vec<Vec<T>> {
+        let sr = self.len();
+        assert!(sr > 0);
+        let sc = self[0].len();
+        self.iter()
+            .map(|a| {
+                assert_eq!(a.len(), sc);
+                <Vec<T> as ArgminAdd<T, Vec<T>>>::add(&a, &other)
+            })
+            .collect()
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -91,7 +66,7 @@ mod tests {
     use paste::item;
 
     macro_rules! make_test {
-        ($t:ty) => {
+        ($t:expr) => {
             item! {
                 #[test]
                 fn [<test_add_vec_scalar_ $t>]() {

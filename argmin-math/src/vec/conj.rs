@@ -6,46 +6,19 @@
 // copied, modified, or distributed except according to those terms.
 
 use crate::ArgminConj;
-use num_complex::Complex;
 
-macro_rules! make_conj {
-    ($t:ty) => {
-        impl ArgminConj for Vec<$t> {
-            #[inline]
-            fn conj(&self) -> Vec<$t> {
-                self.iter().map(|a| <$t as ArgminConj>::conj(a)).collect()
-            }
-        }
-
-        impl ArgminConj for Vec<Vec<$t>> {
-            #[inline]
-            fn conj(&self) -> Vec<Vec<$t>> {
-                self.iter()
-                    .map(|a| a.iter().map(|b| <$t as ArgminConj>::conj(b)).collect())
-                    .collect()
-            }
-        }
-    };
+impl<T: ArgminConj> ArgminConj for Vec<T> {
+    /// Conjugate every element of a arbitrarily nested `Vec`s.
+    #[inline]
+    fn conj(&self) -> Vec<T> {
+        self.iter().map(|a| <T as ArgminConj>::conj(a)).collect()
+    }
 }
-
-make_conj!(isize);
-make_conj!(i8);
-make_conj!(i16);
-make_conj!(i32);
-make_conj!(i64);
-make_conj!(f32);
-make_conj!(f64);
-make_conj!(Complex<isize>);
-make_conj!(Complex<i8>);
-make_conj!(Complex<i16>);
-make_conj!(Complex<i32>);
-make_conj!(Complex<i64>);
-make_conj!(Complex<f32>);
-make_conj!(Complex<f64>);
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use num_complex::Complex;
     use paste::item;
 
     macro_rules! make_test {
