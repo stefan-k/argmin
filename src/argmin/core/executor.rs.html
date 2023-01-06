@@ -666,6 +666,10 @@
 <span id="666">666</span>
 <span id="667">667</span>
 <span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright 2018-2022 argmin developers
 //
 // Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
@@ -677,7 +681,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::core::observers::{Observe, ObserverMode, Observers};
 <span class="kw">use </span><span class="kw">crate</span>::core::{
     DeserializeOwnedAlias, Error, OptimizationResult, Problem, SerializeAlias, Solver, State,
-    TerminationReason, KV,
+    TerminationReason, TerminationStatus, KV,
 };
 <span class="kw">use </span>instant;
 <span class="kw">use </span>std::sync::atomic::{AtomicBool, Ordering};
@@ -811,13 +815,13 @@
 
         <span class="kw">let </span>state = <span class="self">self</span>.state.take().unwrap();
 
-        <span class="kw">let </span>running = Arc::new(AtomicBool::new(<span class="bool-val">true</span>));
+        <span class="kw">let </span>interrupt = Arc::new(AtomicBool::new(<span class="bool-val">false</span>));
 
         <span class="kw">if </span><span class="self">self</span>.ctrlc {
             <span class="attribute">#[cfg(feature = <span class="string">&quot;ctrlc&quot;</span>)]
             </span>{
                 <span class="comment">// Set up the Ctrl-C handler
-                </span><span class="kw">let </span>r = running.clone();
+                </span><span class="kw">let </span>interp = interrupt.clone();
                 <span class="comment">// This is currently a hack to allow checkpoints to be run again within the
                 // same program (usually not really a use case anyway). Unfortunately, this
                 // means that any subsequent run started afterwards will have not Ctrl-C
@@ -826,10 +830,10 @@
                 // (channels and such) which may solve this problem. So far, we have to live
                 // with this.
                 </span><span class="kw">match </span>ctrlc::set_handler(<span class="kw">move </span>|| {
-                    r.store(<span class="bool-val">false</span>, Ordering::SeqCst);
+                    interp.store(<span class="bool-val">true</span>, Ordering::SeqCst);
                 }) {
                     <span class="prelude-val">Err</span>(ctrlc::Error::MultipleHandlers) =&gt; <span class="prelude-val">Ok</span>(()),
-                    r =&gt; r,
+                    interp =&gt; interp,
                 }<span class="question-mark">?</span>;
             }
         }
@@ -858,7 +862,7 @@
             state
         };
 
-        <span class="kw">while </span>running.load(Ordering::SeqCst) {
+        <span class="kw">while </span>!interrupt.load(Ordering::SeqCst) {
             <span class="comment">// check first if it has already terminated
             // This should probably be solved better.
             // First, check if it isn&#39;t already terminated. If it isn&#39;t, evaluate the
@@ -867,7 +871,11 @@
             // within `next_iter()`!
             </span>state = <span class="kw">if </span>!state.terminated() {
                 <span class="kw">let </span>term = <span class="self">self</span>.solver.terminate_internal(<span class="kw-2">&amp;</span>state);
-                state.terminate_with(term)
+                <span class="kw">if let </span>TerminationStatus::Terminated(reason) = term {
+                    state.terminate_with(reason)
+                } <span class="kw">else </span>{
+                    state
+                }
             } <span class="kw">else </span>{
                 state
             };
@@ -927,11 +935,11 @@
             }
         }
 
-        <span class="comment">// in case it stopped prematurely and `termination_reason` is still `NotTerminated`,
-        // someone must have pulled the handbrake
-        </span><span class="kw">if </span>state.get_iter() &lt; state.get_max_iters() &amp;&amp; !state.terminated() {
-            state = state.terminate_with(TerminationReason::Aborted);
+        <span class="kw">if </span>interrupt.load(Ordering::SeqCst) {
+            <span class="comment">// Solver execution has been interrupted manually
+            </span>state = state.terminate_with(TerminationReason::KeyboardInterrupt);
         }
+
         <span class="prelude-val">Ok</span>(OptimizationResult::new(<span class="self">self</span>.problem, <span class="self">self</span>.solver, state))
     }
 
@@ -1278,19 +1286,19 @@
             }
 
             <span class="comment">// Avoid terminating early because param does not change
-            </span><span class="kw">fn </span>terminate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _state: <span class="kw-2">&amp;</span>IterState&lt;P, (), (), (), F&gt;) -&gt; TerminationReason {
-                TerminationReason::NotTerminated
+            </span><span class="kw">fn </span>terminate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _state: <span class="kw-2">&amp;</span>IterState&lt;P, (), (), (), F&gt;) -&gt; TerminationStatus {
+                TerminationStatus::NotTerminated
             }
 
             <span class="comment">// Avoid terminating early because param does not change
             </span><span class="kw">fn </span>terminate_internal(
                 <span class="kw-2">&amp;mut </span><span class="self">self</span>,
                 state: <span class="kw-2">&amp;</span>IterState&lt;P, (), (), (), F&gt;,
-            ) -&gt; TerminationReason {
+            ) -&gt; TerminationStatus {
                 <span class="kw">if </span>state.get_iter() &gt;= state.get_max_iters() {
-                    TerminationReason::MaxItersReached
+                    TerminationStatus::Terminated(TerminationReason::MaxItersReached)
                 } <span class="kw">else </span>{
-                    TerminationReason::NotTerminated
+                    TerminationStatus::NotTerminated
                 }
             }
         }
