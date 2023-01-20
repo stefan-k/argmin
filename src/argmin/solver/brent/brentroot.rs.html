@@ -312,7 +312,7 @@
         <span class="kw">if </span>mid.abs() &lt;= eff_tol || <span class="self">self</span>.fb == <span class="macro">float!</span>(<span class="number">0.0</span>) {
             <span class="kw">return </span><span class="prelude-val">Ok</span>((
                 state
-                    .terminate_with(TerminationReason::TargetPrecisionReached)
+                    .terminate_with(TerminationReason::SolverConverged)
                     .param(<span class="self">self</span>.b)
                     .cost(<span class="self">self</span>.fb.abs()),
                 <span class="prelude-val">None</span>,
@@ -373,4 +373,4 @@
     <span class="macro">test_trait_impl!</span>(brent, BrentRoot&lt;f64&gt;);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="argmin" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0 (69f9c33d7 2022-12-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="argmin" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.1 (90743e729 2023-01-10)" ></div></body></html>

@@ -1294,7 +1294,7 @@
                 .sum::&lt;F&gt;())
         .sqrt();
         <span class="kw">if </span>s &lt; <span class="self">self</span>.sd_tolerance {
-            <span class="kw">return </span>TerminationStatus::Terminated(TerminationReason::TargetToleranceReached);
+            <span class="kw">return </span>TerminationStatus::Terminated(TerminationReason::SolverConverged);
         }
         TerminationStatus::NotTerminated
     }
@@ -1739,4 +1739,4 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="argmin" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0 (69f9c33d7 2022-12-12)" ></div></body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="argmin" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.1 (90743e729 2023-01-10)" ></div></body></html>
