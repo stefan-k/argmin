@@ -1471,7 +1471,7 @@
         </span>info = <span class="number">1</span>;
         bound = <span class="bool-val">true</span>;
         <span class="kw">let </span>theta = <span class="macro">float!</span>(<span class="number">3.0</span>) * (stx.fx - stp.fx) / (stp.x - stx.x) + stx.gx + stp.gx;
-        <span class="kw">let </span>tmp = <span class="macro">vec!</span>[theta, stx.gx, stp.gx];
+        <span class="kw">let </span>tmp = [theta, stx.gx, stp.gx];
         <span class="comment">// Check for a NaN or Inf in tmp before sorting
         </span><span class="kw">if </span>tmp.iter().any(|n| n.is_nan() || n.is_infinite()) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">argmin_error!</span>(
@@ -1505,7 +1505,7 @@
         </span>info = <span class="number">2</span>;
         bound = <span class="bool-val">false</span>;
         <span class="kw">let </span>theta = <span class="macro">float!</span>(<span class="number">3.0</span>) * (stx.fx - stp.fx) / (stp.x - stx.x) + stx.gx + stp.gx;
-        <span class="kw">let </span>tmp = <span class="macro">vec!</span>[theta, stx.gx, stp.gx];
+        <span class="kw">let </span>tmp = [theta, stx.gx, stp.gx];
         <span class="comment">// Check for a NaN or Inf in tmp before sorting
         </span><span class="kw">if </span>tmp.iter().any(|n| n.is_nan() || n.is_infinite()) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">argmin_error!</span>(
@@ -1539,7 +1539,7 @@
         </span>info = <span class="number">3</span>;
         bound = <span class="bool-val">true</span>;
         <span class="kw">let </span>theta = <span class="macro">float!</span>(<span class="number">3.0</span>) * (stx.fx - stp.fx) / (stp.x - stx.x) + stx.gx + stp.gx;
-        <span class="kw">let </span>tmp = <span class="macro">vec!</span>[theta, stx.gx, stp.gx];
+        <span class="kw">let </span>tmp = [theta, stx.gx, stp.gx];
         <span class="comment">// Check for a NaN or Inf in tmp before sorting
         </span><span class="kw">if </span>tmp.iter().any(|n| n.is_nan() || n.is_infinite()) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">argmin_error!</span>(
@@ -1589,7 +1589,7 @@
         bound = <span class="bool-val">false</span>;
         <span class="kw">if </span>brackt {
             <span class="kw">let </span>theta = <span class="macro">float!</span>(<span class="number">3.0</span>) * (stp.fx - sty.fx) / (sty.x - stp.x) + sty.gx + stp.gx;
-            <span class="kw">let </span>tmp = <span class="macro">vec!</span>[theta, sty.gx, stp.gx];
+            <span class="kw">let </span>tmp = [theta, sty.gx, stp.gx];
             <span class="comment">// Check for a NaN or Inf in tmp before sorting
             </span><span class="kw">if </span>tmp.iter().any(|n| n.is_nan() || n.is_infinite()) {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">argmin_error!</span>(

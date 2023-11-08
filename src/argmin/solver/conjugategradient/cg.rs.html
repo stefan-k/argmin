@@ -592,10 +592,10 @@
 
         <span class="macro">assert_relative_eq!</span>(b[<span class="number">0</span>], <span class="number">1.0</span>, epsilon = f64::EPSILON);
         <span class="macro">assert_relative_eq!</span>(b[<span class="number">1</span>], <span class="number">2.0</span>, epsilon = f64::EPSILON);
-        <span class="kw">let </span>r0 = <span class="macro">vec!</span>[<span class="number">2.0f64</span>, <span class="number">2.0</span>];
+        <span class="kw">let </span>r0 = [<span class="number">2.0f64</span>, <span class="number">2.0</span>];
         <span class="macro">assert_relative_eq!</span>(r0[<span class="number">0</span>], r.as_ref().unwrap()[<span class="number">0</span>], epsilon = f64::EPSILON);
         <span class="macro">assert_relative_eq!</span>(r0[<span class="number">1</span>], r.as_ref().unwrap()[<span class="number">1</span>], epsilon = f64::EPSILON);
-        <span class="kw">let </span>pp = <span class="macro">vec!</span>[-<span class="number">2.0f64</span>, -<span class="number">2.0</span>];
+        <span class="kw">let </span>pp = [-<span class="number">2.0f64</span>, -<span class="number">2.0</span>];
         <span class="macro">assert_relative_eq!</span>(pp[<span class="number">0</span>], p.as_ref().unwrap()[<span class="number">0</span>], epsilon = f64::EPSILON);
         <span class="macro">assert_relative_eq!</span>(pp[<span class="number">1</span>], p.as_ref().unwrap()[<span class="number">1</span>], epsilon = f64::EPSILON);
         <span class="macro">assert_relative_eq!</span>(rtr, <span class="number">8.0</span>, epsilon = f64::EPSILON);
