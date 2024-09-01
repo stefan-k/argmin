@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `argmin/src/solver/conjugategradient/nonlinear_cg.rs`."><title>nonlinear_cg.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="argmin" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/argmin/src/solver/conjugategradient/nonlinear_cg.rs`."><title>nonlinear_cg.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="argmin" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -484,12 +484,7 @@
 <a href="#484" id="484">484</a>
 <a href="#485" id="485">485</a>
 <a href="#486" id="486">486</a>
-<a href="#487" id="487">487</a>
-<a href="#488" id="488">488</a>
-<a href="#489" id="489">489</a>
-<a href="#490" id="490">490</a>
-<a href="#491" id="491">491</a>
-</pre></div><pre class="rust"><code><span class="comment">// Copyright 2018-2022 argmin developers
+</pre></div><pre class="rust"><code><span class="comment">// Copyright 2018-2024 argmin developers
 //
 // Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
 // http://apache.org/licenses/LICENSE-2.0&gt; or the MIT license &lt;LICENSE-MIT or
@@ -497,11 +492,11 @@
 // copied, modified, or distributed except according to those terms.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::core::{
-    ArgminFloat, CostFunction, DeserializeOwnedAlias, Error, Executor, Gradient, IterState,
-    LineSearch, NLCGBetaUpdate, OptimizationResult, Problem, SerializeAlias, Solver, State, KV,
+    ArgminFloat, CostFunction, Error, Executor, Gradient, IterState, LineSearch, NLCGBetaUpdate,
+    OptimizationResult, Problem, Solver, State, KV,
 };
 <span class="kw">use </span>argmin_math::{ArgminAdd, ArgminDot, ArgminL2Norm, ArgminMul};
-<span class="attr">#[cfg(feature = <span class="string">&quot;serde1&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"serde1"</span>)]
 </span><span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="doccomment">/// # Non-linear Conjugate Gradient method
@@ -519,7 +514,7 @@
 /// Jorge Nocedal and Stephen J. Wright (2006). Numerical Optimization.
 /// Springer. ISBN 0-387-30303-0.
 </span><span class="attr">#[derive(Clone)]
-#[cfg_attr(feature = <span class="string">&quot;serde1&quot;</span>, derive(Serialize, Deserialize))]
+#[cfg_attr(feature = <span class="string">"serde1"</span>, derive(Serialize, Deserialize))]
 </span><span class="kw">pub struct </span>NonlinearConjugateGradient&lt;P, L, B, F&gt; {
     <span class="doccomment">/// p
     </span>p: <span class="prelude-ty">Option</span>&lt;P&gt;,
@@ -558,14 +553,14 @@
             beta: F::nan(),
             linesearch,
             beta_method,
-            restart_iter: std::u64::MAX,
+            restart_iter: u64::MAX,
             restart_orthogonality: <span class="prelude-val">None</span>,
         }
     }
 
     <span class="doccomment">/// Specify the number of iterations after which a restart should be performed.
     ///
-    /// This allows the algorithm to &quot;forget&quot; previous information which may not be helpful
+    /// This allows the algorithm to "forget" previous information which may not be helpful
     /// anymore.
     ///
     /// # Example
@@ -609,33 +604,30 @@
     </span>}
 }
 
-<span class="kw">impl</span>&lt;O, P, G, L, B, F&gt; Solver&lt;O, IterState&lt;P, G, (), (), F&gt;&gt;
+<span class="kw">impl</span>&lt;O, P, G, L, B, F&gt; Solver&lt;O, IterState&lt;P, G, (), (), (), F&gt;&gt;
     <span class="kw">for </span>NonlinearConjugateGradient&lt;P, L, B, F&gt;
 <span class="kw">where
     </span>O: CostFunction&lt;Param = P, Output = F&gt; + Gradient&lt;Param = P, Gradient = G&gt;,
-    P: Clone + SerializeAlias + DeserializeOwnedAlias + ArgminAdd&lt;P, P&gt; + ArgminMul&lt;F, P&gt;,
-    G: Clone
-        + SerializeAlias
-        + DeserializeOwnedAlias
-        + ArgminMul&lt;F, P&gt;
-        + ArgminDot&lt;G, F&gt;
-        + ArgminL2Norm&lt;F&gt;,
-    L: Clone + LineSearch&lt;P, F&gt; + Solver&lt;O, IterState&lt;P, G, (), (), F&gt;&gt;,
+    P: Clone + ArgminAdd&lt;P, P&gt; + ArgminMul&lt;F, P&gt;,
+    G: Clone + ArgminMul&lt;F, P&gt; + ArgminDot&lt;G, F&gt; + ArgminL2Norm&lt;F&gt;,
+    L: Clone + LineSearch&lt;P, F&gt; + Solver&lt;O, IterState&lt;P, G, (), (), (), F&gt;&gt;,
     B: NLCGBetaUpdate&lt;G, P, F&gt;,
     F: ArgminFloat,
 {
-    <span class="kw">const </span>NAME: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;Nonlinear Conjugate Gradient&quot;</span>;
+    <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="string">"Nonlinear Conjugate Gradient"
+    </span>}
 
     <span class="kw">fn </span>init(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         problem: <span class="kw-2">&amp;mut </span>Problem&lt;O&gt;,
-        state: IterState&lt;P, G, (), (), F&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(IterState&lt;P, G, (), (), F&gt;, <span class="prelude-ty">Option</span>&lt;KV&gt;), Error&gt; {
+        state: IterState&lt;P, G, (), (), (), F&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(IterState&lt;P, G, (), (), (), F&gt;, <span class="prelude-ty">Option</span>&lt;KV&gt;), Error&gt; {
         <span class="kw">let </span>param = state.get_param().ok_or_else(<span class="macro">argmin_error_closure!</span>(
             NotInitialized,
             <span class="macro">concat!</span>(
-                <span class="string">&quot;`NonlinearConjugateGradient` requires an initial parameter vector. &quot;</span>,
-                <span class="string">&quot;Please provide an initial guess via `Executor`s `configure` method.&quot;
+                <span class="string">"`NonlinearConjugateGradient` requires an initial parameter vector. "</span>,
+                <span class="string">"Please provide an initial guess via `Executor`s `configure` method."
             </span>)
         ))<span class="question-mark">?</span>;
         <span class="kw">let </span>cost = problem.cost(param)<span class="question-mark">?</span>;
@@ -647,15 +639,15 @@
     <span class="kw">fn </span>next_iter(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         problem: <span class="kw-2">&amp;mut </span>Problem&lt;O&gt;,
-        <span class="kw-2">mut </span>state: IterState&lt;P, G, (), (), F&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(IterState&lt;P, G, (), (), F&gt;, <span class="prelude-ty">Option</span>&lt;KV&gt;), Error&gt; {
+        <span class="kw-2">mut </span>state: IterState&lt;P, G, (), (), (), F&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(IterState&lt;P, G, (), (), (), F&gt;, <span class="prelude-ty">Option</span>&lt;KV&gt;), Error&gt; {
         <span class="kw">let </span>p = <span class="self">self</span>.p.as_ref().ok_or_else(<span class="macro">argmin_error_closure!</span>(
             PotentialBug,
-            <span class="string">&quot;`NonlinearConjugateGradient`: Field `p` not set&quot;
+            <span class="string">"`NonlinearConjugateGradient`: Field `p` not set"
         </span>))<span class="question-mark">?</span>;
         <span class="kw">let </span>xk = state.take_param().ok_or_else(<span class="macro">argmin_error_closure!</span>(
             PotentialBug,
-            <span class="string">&quot;`NonlinearConjugateGradient`: No `param` in `state`&quot;
+            <span class="string">"`NonlinearConjugateGradient`: No `param` in `state`"
         </span>))<span class="question-mark">?</span>;
         <span class="kw">let </span>grad = state
             .take_gradient()
@@ -674,7 +666,7 @@
         } = Executor::new(
             problem.take_problem().ok_or_else(<span class="macro">argmin_error_closure!</span>(
                 PotentialBug,
-                <span class="string">&quot;`NonlinearConjugateGradient`: Failed to take `problem` for line search&quot;
+                <span class="string">"`NonlinearConjugateGradient`: Failed to take `problem` for line search"
             </span>))<span class="question-mark">?</span>,
             <span class="self">self</span>.linesearch.clone(),
         )
@@ -687,7 +679,7 @@
 
         <span class="kw">let </span>xk1 = line_state.take_param().ok_or_else(<span class="macro">argmin_error_closure!</span>(
             PotentialBug,
-            <span class="string">&quot;`NonlinearConjugateGradient`: No `param` returned by line search&quot;
+            <span class="string">"`NonlinearConjugateGradient`: No `param` returned by line search"
         </span>))<span class="question-mark">?</span>;
 
         <span class="comment">// Update of beta
@@ -715,26 +707,24 @@
 
         <span class="prelude-val">Ok</span>((
             state.param(xk1).cost(cost).gradient(new_grad),
-            <span class="prelude-val">Some</span>(<span class="macro">kv!</span>(<span class="string">&quot;beta&quot; </span>=&gt; <span class="self">self</span>.beta;
-             <span class="string">&quot;restart_iter&quot; </span>=&gt; restart_iter;
-             <span class="string">&quot;restart_orthogonality&quot; </span>=&gt; restart_orthogonality;
+            <span class="prelude-val">Some</span>(<span class="macro">kv!</span>(<span class="string">"beta" </span>=&gt; <span class="self">self</span>.beta;
+             <span class="string">"restart_iter" </span>=&gt; restart_iter;
+             <span class="string">"restart_orthogonality" </span>=&gt; restart_orthogonality;
             )),
         ))
     }
 }
 
 <span class="attr">#[cfg(test)]
+#[allow(clippy::let_unit_value)]
 </span><span class="kw">mod </span>tests {
-    <span class="attr">#![allow(clippy::let_unit_value)]
-
-    </span><span class="kw">use super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::core::test_utils::TestProblem;
     <span class="kw">use </span><span class="kw">crate</span>::core::ArgminError;
     <span class="kw">use </span><span class="kw">crate</span>::solver::conjugategradient::beta::PolakRibiere;
     <span class="kw">use </span><span class="kw">crate</span>::solver::linesearch::{
         condition::ArmijoCondition, BacktrackingLineSearch, MoreThuenteLineSearch,
     };
-    <span class="kw">use </span><span class="kw">crate</span>::test_trait_impl;
     <span class="kw">use </span>approx::assert_relative_eq;
 
     <span class="attr">#[derive(Eq, PartialEq, Clone, Copy, Debug)]
@@ -771,7 +761,7 @@
         <span class="macro">assert!</span>(beta.is_nan());
         <span class="macro">assert_eq!</span>(linesearch, linesearch);
         <span class="macro">assert_eq!</span>(beta_method, beta_method);
-        <span class="macro">assert_eq!</span>(restart_iter, std::u64::MAX);
+        <span class="macro">assert_eq!</span>(restart_iter, u64::MAX);
         <span class="macro">assert!</span>(restart_orthogonality.is_none());
     }
 
@@ -781,7 +771,7 @@
         <span class="kw">let </span>beta_method = ();
         <span class="kw">let </span>nlcg: NonlinearConjugateGradient&lt;Vec&lt;f64&gt;, <span class="kw">_</span>, <span class="kw">_</span>, f64&gt; =
             NonlinearConjugateGradient::new(linesearch, beta_method);
-        <span class="macro">assert_eq!</span>(nlcg.restart_iter, std::u64::MAX);
+        <span class="macro">assert_eq!</span>(nlcg.restart_iter, u64::MAX);
         <span class="kw">let </span>nlcg = nlcg.restart_iters(<span class="number">100</span>);
         <span class="macro">assert_eq!</span>(nlcg.restart_iter, <span class="number">100</span>);
     }
@@ -812,8 +802,8 @@
             res,
             ArgminError,
             <span class="macro">concat!</span>(
-                <span class="string">&quot;Not initialized: \&quot;`NonlinearConjugateGradient` requires an initial parameter vector. &quot;</span>,
-                <span class="string">&quot;Please provide an initial guess via `Executor`s `configure` method.\&quot;&quot;
+                <span class="string">"Not initialized: \"`NonlinearConjugateGradient` requires an initial parameter vector. "</span>,
+                <span class="string">"Please provide an initial guess via `Executor`s `configure` method.\""
             </span>)
         );
     }
@@ -825,7 +815,7 @@
         <span class="kw">let </span>beta_method = PolakRibiere::new();
         <span class="kw">let </span><span class="kw-2">mut </span>nlcg: NonlinearConjugateGradient&lt;Vec&lt;f64&gt;, <span class="kw">_</span>, <span class="kw">_</span>, f64&gt; =
             NonlinearConjugateGradient::new(linesearch, beta_method);
-        <span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), (), f64&gt; =
+        <span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), (), (), f64&gt; =
             IterState::new().param(<span class="macro">vec!</span>[<span class="number">3.0</span>, <span class="number">4.0</span>]);
         <span class="kw">let </span>(state_out, kv) = nlcg
             .init(<span class="kw-2">&amp;mut </span>Problem::new(TestProblem::new()), state.clone())
@@ -873,9 +863,9 @@
             res,
             ArgminError,
             <span class="macro">concat!</span>(
-                <span class="string">&quot;Potential bug: \&quot;`NonlinearConjugateGradient`: &quot;</span>,
-                <span class="string">&quot;Field `p` not set\&quot;. This is potentially a bug. &quot;</span>,
-                <span class="string">&quot;Please file a report on https://github.com/argmin-rs/argmin/issues&quot;
+                <span class="string">"Potential bug: \"`NonlinearConjugateGradient`: "</span>,
+                <span class="string">"Field `p` not set\". This is potentially a bug. "</span>,
+                <span class="string">"Please file a report on https://github.com/argmin-rs/argmin/issues"
             </span>)
         );
     }
@@ -895,9 +885,9 @@
             res,
             ArgminError,
             <span class="macro">concat!</span>(
-                <span class="string">&quot;Potential bug: \&quot;`NonlinearConjugateGradient`: &quot;</span>,
-                <span class="string">&quot;No `param` in `state`\&quot;. This is potentially a bug. &quot;</span>,
-                <span class="string">&quot;Please file a report on https://github.com/argmin-rs/argmin/issues&quot;
+                <span class="string">"Potential bug: \"`NonlinearConjugateGradient`: "</span>,
+                <span class="string">"No `param` in `state`\". This is potentially a bug. "</span>,
+                <span class="string">"Please file a report on https://github.com/argmin-rs/argmin/issues"
             </span>)
         );
     }
@@ -921,9 +911,9 @@
             res,
             ArgminError,
             <span class="macro">concat!</span>(
-                <span class="string">&quot;Potential bug: \&quot;`NonlinearConjugateGradient`: &quot;</span>,
-                <span class="string">&quot;Failed to take `problem` for line search\&quot;. This is potentially a bug. &quot;</span>,
-                <span class="string">&quot;Please file a report on https://github.com/argmin-rs/argmin/issues&quot;
+                <span class="string">"Potential bug: \"`NonlinearConjugateGradient`: "</span>,
+                <span class="string">"Failed to take `problem` for line search\". This is potentially a bug. "</span>,
+                <span class="string">"Please file a report on https://github.com/argmin-rs/argmin/issues"
             </span>)
         );
     }
@@ -943,7 +933,7 @@
         <span class="macro">assert!</span>(kv.is_none());
         <span class="kw">let </span>(<span class="kw-2">mut </span>state, kv) = nlcg.next_iter(<span class="kw-2">&amp;mut </span>problem, state).unwrap();
         state.update();
-        <span class="kw">let </span>kv2 = <span class="macro">kv!</span>(<span class="string">&quot;beta&quot; </span>=&gt; <span class="number">0.0</span>; <span class="string">&quot;restart_iter&quot; </span>=&gt; <span class="bool-val">false</span>; <span class="string">&quot;restart_orthogonality&quot; </span>=&gt; <span class="bool-val">false</span>;);
+        <span class="kw">let </span>kv2 = <span class="macro">kv!</span>(<span class="string">"beta" </span>=&gt; <span class="number">0.0</span>; <span class="string">"restart_iter" </span>=&gt; <span class="bool-val">false</span>; <span class="string">"restart_orthogonality" </span>=&gt; <span class="bool-val">false</span>;);
         <span class="macro">assert_eq!</span>(kv.unwrap(), kv2);
         <span class="macro">assert_relative_eq!</span>(
             state.param.as_ref().unwrap()[<span class="number">0</span>],

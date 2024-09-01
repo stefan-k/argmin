@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `argmin/src/solver/quasinewton/lbfgs.rs`."><title>lbfgs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="argmin" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/argmin/src/solver/quasinewton/lbfgs.rs`."><title>lbfgs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="argmin" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -734,7 +734,16 @@
 <a href="#734" id="734">734</a>
 <a href="#735" id="735">735</a>
 <a href="#736" id="736">736</a>
-</pre></div><pre class="rust"><code><span class="comment">// Copyright 2018-2022 argmin developers
+<a href="#737" id="737">737</a>
+<a href="#738" id="738">738</a>
+<a href="#739" id="739">739</a>
+<a href="#740" id="740">740</a>
+<a href="#741" id="741">741</a>
+<a href="#742" id="742">742</a>
+<a href="#743" id="743">743</a>
+<a href="#744" id="744">744</a>
+<a href="#745" id="745">745</a>
+</pre></div><pre class="rust"><code><span class="comment">// Copyright 2018-2024 argmin developers
 //
 // Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
 // http://apache.org/licenses/LICENSE-2.0&gt; or the MIT license &lt;LICENSE-MIT or
@@ -742,15 +751,14 @@
 // copied, modified, or distributed except according to those terms.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::core::{
-    ArgminFloat, CostFunction, DeserializeOwnedAlias, Error, Executor, Gradient, IterState,
-    LineSearch, OptimizationResult, Problem, SerializeAlias, Solver, State, TerminationReason,
-    TerminationStatus, KV,
+    ArgminFloat, CostFunction, Error, Executor, Gradient, IterState, LineSearch,
+    OptimizationResult, Problem, Solver, State, TerminationReason, TerminationStatus, KV,
 };
 <span class="kw">use </span>argmin_math::{
     ArgminAdd, ArgminDot, ArgminL1Norm, ArgminL2Norm, ArgminMinMax, ArgminMul, ArgminSignum,
     ArgminSub, ArgminZeroLike,
 };
-<span class="attr">#[cfg(feature = <span class="string">&quot;serde1&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"serde1"</span>)]
 </span><span class="kw">use </span>serde::{Deserialize, Serialize};
 <span class="kw">use </span>std::collections::VecDeque;
 <span class="kw">use </span>std::marker::PhantomData;
@@ -811,7 +819,7 @@
 /// Galen Andrew and Jianfeng Gao (2007). Scalable Training of L1-Regularized Log-Linear Models,
 /// International Conference on Machine Learning.
 </span><span class="attr">#[derive(Clone)]
-#[cfg_attr(feature = <span class="string">&quot;serde1&quot;</span>, derive(Serialize, Deserialize))]
+#[cfg_attr(feature = <span class="string">"serde1"</span>, derive(Serialize, Deserialize))]
 </span><span class="kw">pub struct </span>LBFGS&lt;L, P, G, F&gt; {
     <span class="doccomment">/// line search
     </span>linesearch: L,
@@ -876,7 +884,7 @@
         <span class="kw">if </span>tol_grad &lt; <span class="macro">float!</span>(<span class="number">0.0</span>) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">argmin_error!</span>(
                 InvalidParameter,
-                <span class="string">&quot;`L-BFGS`: gradient tolerance must be &gt;= 0.&quot;
+                <span class="string">"`L-BFGS`: gradient tolerance must be &gt;= 0."
             </span>));
         }
         <span class="self">self</span>.tol_grad = tol_grad;
@@ -902,7 +910,7 @@
         <span class="kw">if </span>tol_cost &lt; <span class="macro">float!</span>(<span class="number">0.0</span>) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">argmin_error!</span>(
                 InvalidParameter,
-                <span class="string">&quot;`L-BFGS`: cost tolerance must be &gt;= 0.&quot;
+                <span class="string">"`L-BFGS`: cost tolerance must be &gt;= 0."
             </span>));
         }
         <span class="self">self</span>.tol_cost = tol_cost;
@@ -927,7 +935,7 @@
         <span class="kw">if </span>l1_coeff &lt;= <span class="macro">float!</span>(<span class="number">0.0</span>) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">argmin_error!</span>(
                 InvalidParameter,
-                <span class="string">&quot;`L-BFGS`: coefficient of L1-regularization must be &gt; 0.&quot;
+                <span class="string">"`L-BFGS`: coefficient of L1-regularization must be &gt; 0."
             </span>));
         }
         <span class="self">self</span>.l1_coeff = <span class="prelude-val">Some</span>(l1_coeff);
@@ -1038,13 +1046,10 @@
     }
 }
 
-<span class="kw">impl</span>&lt;O, L, P, G, F&gt; Solver&lt;O, IterState&lt;P, G, (), (), F&gt;&gt; <span class="kw">for </span>LBFGS&lt;L, P, G, F&gt;
+<span class="kw">impl</span>&lt;O, L, P, G, F&gt; Solver&lt;O, IterState&lt;P, G, (), (), (), F&gt;&gt; <span class="kw">for </span>LBFGS&lt;L, P, G, F&gt;
 <span class="kw">where
     </span>O: CostFunction&lt;Param = P, Output = F&gt; + Gradient&lt;Param = P, Gradient = G&gt;,
     P: Clone
-        + std::fmt::Debug
-        + SerializeAlias
-        + DeserializeOwnedAlias
         + ArgminSub&lt;P, P&gt;
         + ArgminSub&lt;F, P&gt;
         + ArgminAdd&lt;P, P&gt;
@@ -1058,9 +1063,6 @@
         + ArgminZeroLike
         + ArgminMinMax,
     G: Clone
-        + std::fmt::Debug
-        + SerializeAlias
-        + DeserializeOwnedAlias
         + ArgminL2Norm&lt;F&gt;
         + ArgminSub&lt;G, G&gt;
         + ArgminAdd&lt;G, G&gt;
@@ -1071,21 +1073,25 @@
         + ArgminMul&lt;F, P&gt;
         + ArgminZeroLike
         + ArgminMinMax,
-    L: Clone + LineSearch&lt;P, F&gt; + Solver&lt;LineSearchProblem&lt;O, P, G, F&gt;, IterState&lt;P, G, (), (), F&gt;&gt;,
+    L: Clone
+        + LineSearch&lt;P, F&gt;
+        + Solver&lt;LineSearchProblem&lt;O, P, G, F&gt;, IterState&lt;P, G, (), (), (), F&gt;&gt;,
     F: ArgminFloat,
 {
-    <span class="kw">const </span>NAME: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;L-BFGS&quot;</span>;
+    <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="string">"L-BFGS"
+    </span>}
 
     <span class="kw">fn </span>init(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         problem: <span class="kw-2">&amp;mut </span>Problem&lt;O&gt;,
-        <span class="kw-2">mut </span>state: IterState&lt;P, G, (), (), F&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(IterState&lt;P, G, (), (), F&gt;, <span class="prelude-ty">Option</span>&lt;KV&gt;), Error&gt; {
+        <span class="kw-2">mut </span>state: IterState&lt;P, G, (), (), (), F&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(IterState&lt;P, G, (), (), (), F&gt;, <span class="prelude-ty">Option</span>&lt;KV&gt;), Error&gt; {
         <span class="kw">let </span>param = state.take_param().ok_or_else(<span class="macro">argmin_error_closure!</span>(
             NotInitialized,
             <span class="macro">concat!</span>(
-                <span class="string">&quot;`L-BFGS` requires an initial parameter vector. &quot;</span>,
-                <span class="string">&quot;Please provide an initial guess via `Executor`s `configure` method.&quot;
+                <span class="string">"`L-BFGS` requires an initial parameter vector. "</span>,
+                <span class="string">"Please provide an initial guess via `Executor`s `configure` method."
             </span>)
         ))<span class="question-mark">?</span>;
 
@@ -1111,18 +1117,18 @@
     <span class="kw">fn </span>next_iter(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         problem: <span class="kw-2">&amp;mut </span>Problem&lt;O&gt;,
-        <span class="kw-2">mut </span>state: IterState&lt;P, G, (), (), F&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(IterState&lt;P, G, (), (), F&gt;, <span class="prelude-ty">Option</span>&lt;KV&gt;), Error&gt; {
+        <span class="kw-2">mut </span>state: IterState&lt;P, G, (), (), (), F&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(IterState&lt;P, G, (), (), (), F&gt;, <span class="prelude-ty">Option</span>&lt;KV&gt;), Error&gt; {
         <span class="kw">let </span>param = state.take_param().ok_or_else(<span class="macro">argmin_error_closure!</span>(
             PotentialBug,
-            <span class="string">&quot;`L-BFGS`: Parameter vector in state not set.&quot;
+            <span class="string">"`L-BFGS`: Parameter vector in state not set."
         </span>))<span class="question-mark">?</span>;
         <span class="kw">let </span>cur_cost = state.get_cost();
 
         <span class="comment">// If L1 regularization is enabled, the state contains pseudo gradient.
         </span><span class="kw">let </span><span class="kw-2">mut </span>prev_grad = state.take_gradient().ok_or_else(<span class="macro">argmin_error_closure!</span>(
             PotentialBug,
-            <span class="string">&quot;`L-BFGS`: Gradient in state not set.&quot;
+            <span class="string">"`L-BFGS`: Gradient in state not set."
         </span>))<span class="question-mark">?</span>;
         <span class="kw">if let </span><span class="prelude-val">Some</span>(l1_coeff) = <span class="self">self</span>.l1_coeff {
             <span class="kw">if </span><span class="self">self</span>.l1_prev_unreg_grad.is_none() {
@@ -1175,12 +1181,8 @@
 
         <span class="self">self</span>.linesearch.search_direction(d);
 
-        <span class="comment">// Run solver
-        </span><span class="kw">let </span>OptimizationResult {
-            problem: <span class="kw-2">mut </span>line_problem,
-            state: <span class="kw-2">mut </span>linesearch_state,
-            ..
-        } = Executor::new(line_problem, <span class="self">self</span>.linesearch.clone())
+        <span class="comment">// Run line search
+        </span><span class="kw">let </span>linesearch_result = Executor::new(line_problem, <span class="self">self</span>.linesearch.clone())
             .configure(|config| {
                 config
                     .param(param.clone())
@@ -1188,7 +1190,24 @@
                     .cost(cur_cost)
             })
             .ctrlc(<span class="bool-val">false</span>)
-            .run()<span class="question-mark">?</span>;
+            .run();
+
+        <span class="kw">let </span>OptimizationResult {
+            problem: <span class="kw-2">mut </span>line_problem,
+            state: <span class="kw-2">mut </span>linesearch_state,
+            ..
+        } = <span class="kw">match </span>linesearch_result {
+            <span class="prelude-val">Ok</span>(res) =&gt; res,
+            <span class="prelude-val">Err</span>(e) =&gt; {
+                <span class="kw">return </span><span class="prelude-val">Ok</span>((
+                    state.terminate_with(TerminationReason::SolverExit(<span class="macro">format!</span>(
+                        <span class="string">"Line search terminated with: '{}'"</span>,
+                        e,
+                    ))),
+                    <span class="prelude-val">Some</span>(<span class="macro">kv!</span>(<span class="string">"gamma" </span>=&gt; gamma;)),
+                ))
+            }
+        };
 
         <span class="kw">let </span><span class="kw-2">mut </span>xk1 = linesearch_state.take_param().unwrap();
         <span class="kw">let </span>next_cost = linesearch_state.get_cost();
@@ -1225,11 +1244,11 @@
 
         <span class="prelude-val">Ok</span>((
             state.param(xk1).cost(next_cost).gradient(grad),
-            <span class="prelude-val">Some</span>(<span class="macro">kv!</span>(<span class="string">&quot;gamma&quot; </span>=&gt; gamma;)),
+            <span class="prelude-val">Some</span>(<span class="macro">kv!</span>(<span class="string">"gamma" </span>=&gt; gamma;)),
         ))
     }
 
-    <span class="kw">fn </span>terminate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, state: <span class="kw-2">&amp;</span>IterState&lt;P, G, (), (), F&gt;) -&gt; TerminationStatus {
+    <span class="kw">fn </span>terminate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, state: <span class="kw-2">&amp;</span>IterState&lt;P, G, (), (), (), F&gt;) -&gt; TerminationStatus {
         <span class="kw">if </span>state.get_gradient().unwrap().l2_norm() &lt; <span class="self">self</span>.tol_grad {
             <span class="kw">return </span>TerminationStatus::Terminated(TerminationReason::SolverConverged);
         }
@@ -1245,10 +1264,9 @@
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::core::{
         test_utils::{TestProblem, TestSparseProblem},
-        ArgminError, IterState, State,
+        ArgminError,
     };
     <span class="kw">use </span><span class="kw">crate</span>::solver::linesearch::MoreThuenteLineSearch;
-    <span class="kw">use </span><span class="kw">crate</span>::test_trait_impl;
 
     <span class="macro">test_trait_impl!</span>(
         lbfgs,
@@ -1304,7 +1322,7 @@
             <span class="macro">assert_error!</span>(
                 res,
                 ArgminError,
-                <span class="string">&quot;Invalid parameter: \&quot;`L-BFGS`: gradient tolerance must be &gt;= 0.\&quot;&quot;
+                <span class="string">"Invalid parameter: \"`L-BFGS`: gradient tolerance must be &gt;= 0.\""
             </span>);
         }
     }
@@ -1331,7 +1349,7 @@
             <span class="macro">assert_error!</span>(
                 res,
                 ArgminError,
-                <span class="string">&quot;Invalid parameter: \&quot;`L-BFGS`: cost tolerance must be &gt;= 0.\&quot;&quot;
+                <span class="string">"Invalid parameter: \"`L-BFGS`: cost tolerance must be &gt;= 0.\""
             </span>);
         }
     }
@@ -1345,20 +1363,20 @@
         <span class="kw">let </span><span class="kw-2">mut </span>lbfgs: LBFGS&lt;<span class="kw">_</span>, Vec&lt;f64&gt;, Vec&lt;f64&gt;, f64&gt; = LBFGS::new(linesearch, <span class="number">3</span>);
 
         <span class="comment">// Forgot to initialize the parameter vector
-        </span><span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), (), f64&gt; = IterState::new();
+        </span><span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), (), (), f64&gt; = IterState::new();
         <span class="kw">let </span>problem = TestProblem::new();
         <span class="kw">let </span>res = lbfgs.init(<span class="kw-2">&amp;mut </span>Problem::new(problem), state);
         <span class="macro">assert_error!</span>(
             res,
             ArgminError,
             <span class="macro">concat!</span>(
-                <span class="string">&quot;Not initialized: \&quot;`L-BFGS` requires an initial parameter vector. Please &quot;</span>,
-                <span class="string">&quot;provide an initial guess via `Executor`s `configure` method.\&quot;&quot;
+                <span class="string">"Not initialized: \"`L-BFGS` requires an initial parameter vector. Please "</span>,
+                <span class="string">"provide an initial guess via `Executor`s `configure` method.\""
             </span>)
         );
 
         <span class="comment">// All good.
-        </span><span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), (), f64&gt; =
+        </span><span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), (), (), f64&gt; =
             IterState::new().param(param.clone());
         <span class="kw">let </span>problem = TestProblem::new();
         <span class="kw">let </span>(<span class="kw-2">mut </span>state_out, kv) = lbfgs.init(<span class="kw-2">&amp;mut </span>Problem::new(problem), state).unwrap();
@@ -1388,7 +1406,7 @@
 
         <span class="kw">let </span><span class="kw-2">mut </span>lbfgs: LBFGS&lt;<span class="kw">_</span>, Vec&lt;f64&gt;, Vec&lt;f64&gt;, f64&gt; = LBFGS::new(linesearch, <span class="number">3</span>);
 
-        <span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), (), f64&gt; =
+        <span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), (), (), f64&gt; =
             IterState::new().param(param).cost(<span class="number">1234.0</span>);
 
         <span class="kw">let </span>problem = TestProblem::new();
@@ -1408,7 +1426,7 @@
 
         <span class="kw">let </span><span class="kw-2">mut </span>lbfgs: LBFGS&lt;<span class="kw">_</span>, Vec&lt;f64&gt;, Vec&lt;f64&gt;, f64&gt; = LBFGS::new(linesearch, <span class="number">3</span>);
 
-        <span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), (), f64&gt; =
+        <span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), (), (), f64&gt; =
             IterState::new().param(param).gradient(gradient.clone());
 
         <span class="kw">let </span>problem = TestProblem::new();

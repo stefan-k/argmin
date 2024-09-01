@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `argmin/src/solver/trustregion/steihaug.rs`."><title>steihaug.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="argmin" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/argmin/src/solver/trustregion/steihaug.rs`."><title>steihaug.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="argmin" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -467,7 +467,7 @@
 <a href="#467" id="467">467</a>
 <a href="#468" id="468">468</a>
 <a href="#469" id="469">469</a>
-</pre></div><pre class="rust"><code><span class="comment">// Copyright 2018-2022 argmin developers
+</pre></div><pre class="rust"><code><span class="comment">// Copyright 2018-2024 argmin developers
 //
 // Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
 // http://apache.org/licenses/LICENSE-2.0&gt; or the MIT license &lt;LICENSE-MIT or
@@ -475,13 +475,13 @@
 // copied, modified, or distributed except according to those terms.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::core::{
-    ArgminFloat, Error, IterState, Problem, SerializeAlias, Solver, State, TerminationReason,
-    TerminationStatus, TrustRegionRadius, KV,
+    ArgminFloat, Error, IterState, Problem, Solver, State, TerminationReason, TerminationStatus,
+    TrustRegionRadius, KV,
 };
 <span class="kw">use </span>argmin_math::{
     ArgminAdd, ArgminDot, ArgminL2Norm, ArgminMul, ArgminWeightedDot, ArgminZeroLike,
 };
-<span class="attr">#[cfg(feature = <span class="string">&quot;serde1&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"serde1"</span>)]
 </span><span class="kw">use </span>serde::{Deserialize, Serialize};
 
 <span class="doccomment">/// # Steihaug method
@@ -494,7 +494,7 @@
 /// Jorge Nocedal and Stephen J. Wright (2006). Numerical Optimization.
 /// Springer. ISBN 0-387-30303-0.
 </span><span class="attr">#[derive(Clone, Default)]
-#[cfg_attr(feature = <span class="string">&quot;serde1&quot;</span>, derive(Serialize, Deserialize))]
+#[cfg_attr(feature = <span class="string">"serde1"</span>, derive(Serialize, Deserialize))]
 </span><span class="kw">pub struct </span>Steihaug&lt;P, F&gt; {
     <span class="doccomment">/// Radius
     </span>radius: F,
@@ -536,7 +536,7 @@
             rtr: F::nan(),
             r_0_norm: F::nan(),
             d: <span class="prelude-val">None</span>,
-            max_iters: std::u64::MAX,
+            max_iters: u64::MAX,
         }
     }
 
@@ -560,7 +560,7 @@
         <span class="kw">if </span>epsilon &lt;= <span class="macro">float!</span>(<span class="number">0.0</span>) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">argmin_error!</span>(
                 InvalidParameter,
-                <span class="string">&quot;`Steihaug`: epsilon must be &gt; 0.0.&quot;
+                <span class="string">"`Steihaug`: epsilon must be &gt; 0.0."
             </span>));
         }
         <span class="self">self</span>.epsilon = epsilon;
@@ -647,10 +647,9 @@
     }
 }
 
-<span class="kw">impl</span>&lt;P, O, F, H&gt; Solver&lt;O, IterState&lt;P, P, (), H, F&gt;&gt; <span class="kw">for </span>Steihaug&lt;P, F&gt;
+<span class="kw">impl</span>&lt;P, O, F, H&gt; Solver&lt;O, IterState&lt;P, P, (), H, (), F&gt;&gt; <span class="kw">for </span>Steihaug&lt;P, F&gt;
 <span class="kw">where
     </span>P: Clone
-        + SerializeAlias
         + ArgminMul&lt;F, P&gt;
         + ArgminL2Norm&lt;F&gt;
         + ArgminDot&lt;P, F&gt;
@@ -659,20 +658,22 @@
     H: ArgminDot&lt;P, P&gt;,
     F: ArgminFloat,
 {
-    <span class="kw">const </span>NAME: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;Steihaug&quot;</span>;
+    <span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+        <span class="string">"Steihaug"
+    </span>}
 
     <span class="kw">fn </span>init(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _problem: <span class="kw-2">&amp;mut </span>Problem&lt;O&gt;,
-        state: IterState&lt;P, P, (), H, F&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(IterState&lt;P, P, (), H, F&gt;, <span class="prelude-ty">Option</span>&lt;KV&gt;), Error&gt; {
+        state: IterState&lt;P, P, (), H, (), F&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(IterState&lt;P, P, (), H, (), F&gt;, <span class="prelude-ty">Option</span>&lt;KV&gt;), Error&gt; {
         <span class="kw">let </span>r = state
             .get_gradient()
             .ok_or_else(<span class="macro">argmin_error_closure!</span>(
                 NotInitialized,
                 <span class="macro">concat!</span>(
-                    <span class="string">&quot;`Steihaug` requires an initial gradient. &quot;</span>,
-                    <span class="string">&quot;Please provide an initial gradient via `Executor`s `configure` method.&quot;
+                    <span class="string">"`Steihaug` requires an initial gradient. "</span>,
+                    <span class="string">"Please provide an initial gradient via `Executor`s `configure` method."
                 </span>)
             ))<span class="question-mark">?
             </span>.clone();
@@ -681,8 +682,8 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">argmin_error!</span>(
                 NotInitialized,
                 <span class="macro">concat!</span>(
-                    <span class="string">&quot;`Steihaug` requires an initial Hessian. &quot;</span>,
-                    <span class="string">&quot;Please provide an initial Hessian via `Executor`s `configure` method.&quot;
+                    <span class="string">"`Steihaug` requires an initial Hessian. "</span>,
+                    <span class="string">"Please provide an initial Hessian via `Executor`s `configure` method."
                 </span>)
             ));
         }
@@ -701,16 +702,16 @@
     <span class="kw">fn </span>next_iter(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         _problem: <span class="kw-2">&amp;mut </span>Problem&lt;O&gt;,
-        <span class="kw-2">mut </span>state: IterState&lt;P, P, (), H, F&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(IterState&lt;P, P, (), H, F&gt;, <span class="prelude-ty">Option</span>&lt;KV&gt;), Error&gt; {
+        <span class="kw-2">mut </span>state: IterState&lt;P, P, (), H, (), F&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(IterState&lt;P, P, (), H, (), F&gt;, <span class="prelude-ty">Option</span>&lt;KV&gt;), Error&gt; {
         <span class="kw">let </span>grad = state.take_gradient().ok_or_else(<span class="macro">argmin_error_closure!</span>(
             PotentialBug,
-            <span class="string">&quot;`Steihaug`: Gradient in state not set.&quot;
+            <span class="string">"`Steihaug`: Gradient in state not set."
         </span>))<span class="question-mark">?</span>;
 
         <span class="kw">let </span>h = state.take_hessian().ok_or_else(<span class="macro">argmin_error_closure!</span>(
             PotentialBug,
-            <span class="string">&quot;`Steihaug`: Hessian in state not set.&quot;
+            <span class="string">"`Steihaug`: Hessian in state not set."
         </span>))<span class="question-mark">?</span>;
 
         <span class="kw">let </span>d = <span class="self">self</span>.d.as_ref().unwrap();
@@ -767,7 +768,7 @@
         ))
     }
 
-    <span class="kw">fn </span>terminate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, state: <span class="kw-2">&amp;</span>IterState&lt;P, P, (), H, F&gt;) -&gt; TerminationStatus {
+    <span class="kw">fn </span>terminate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, state: <span class="kw-2">&amp;</span>IterState&lt;P, P, (), H, (), F&gt;) -&gt; TerminationStatus {
         <span class="kw">if </span><span class="self">self</span>.r_0_norm &lt; <span class="self">self</span>.epsilon {
             <span class="kw">return </span>TerminationStatus::Terminated(TerminationReason::SolverConverged);
         }
@@ -800,7 +801,6 @@
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::core::test_utils::TestProblem;
     <span class="kw">use </span><span class="kw">crate</span>::core::ArgminError;
-    <span class="kw">use </span><span class="kw">crate</span>::test_trait_impl;
     <span class="kw">use </span>approx::assert_relative_eq;
 
     <span class="macro">test_trait_impl!</span>(steihaug, Steihaug&lt;TestProblem, f64&gt;);
@@ -842,7 +842,7 @@
             <span class="macro">assert_error!</span>(
                 res,
                 ArgminError,
-                <span class="string">&quot;Invalid parameter: \&quot;`Steihaug`: epsilon must be &gt; 0.0.\&quot;&quot;
+                <span class="string">"Invalid parameter: \"`Steihaug`: epsilon must be &gt; 0.0.\""
             </span>);
         }
     }
@@ -873,20 +873,20 @@
         sh.set_radius(<span class="number">1.0</span>);
 
         <span class="comment">// Forgot to initialize gradient
-        </span><span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), Vec&lt;Vec&lt;f64&gt;&gt;, f64&gt; = IterState::new();
+        </span><span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), Vec&lt;Vec&lt;f64&gt;&gt;, (), f64&gt; = IterState::new();
         <span class="kw">let </span>problem = TestProblem::new();
         <span class="kw">let </span>res = sh.init(<span class="kw-2">&amp;mut </span>Problem::new(problem), state);
         <span class="macro">assert_error!</span>(
             res,
             ArgminError,
             <span class="macro">concat!</span>(
-                <span class="string">&quot;Not initialized: \&quot;`Steihaug` requires an initial gradient. Please &quot;</span>,
-                <span class="string">&quot;provide an initial gradient via `Executor`s `configure` method.\&quot;&quot;
+                <span class="string">"Not initialized: \"`Steihaug` requires an initial gradient. Please "</span>,
+                <span class="string">"provide an initial gradient via `Executor`s `configure` method.\""
             </span>)
         );
 
         <span class="comment">// Forgot to initialize Hessian
-        </span><span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), Vec&lt;Vec&lt;f64&gt;&gt;, f64&gt; =
+        </span><span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), Vec&lt;Vec&lt;f64&gt;&gt;, (), f64&gt; =
             IterState::new().gradient(grad.clone());
         <span class="kw">let </span>problem = TestProblem::new();
         <span class="kw">let </span>res = sh.init(<span class="kw-2">&amp;mut </span>Problem::new(problem), state);
@@ -894,13 +894,13 @@
             res,
             ArgminError,
             <span class="macro">concat!</span>(
-                <span class="string">&quot;Not initialized: \&quot;`Steihaug` requires an initial Hessian. Please &quot;</span>,
-                <span class="string">&quot;provide an initial Hessian via `Executor`s `configure` method.\&quot;&quot;
+                <span class="string">"Not initialized: \"`Steihaug` requires an initial Hessian. Please "</span>,
+                <span class="string">"provide an initial Hessian via `Executor`s `configure` method.\""
             </span>)
         );
 
         <span class="comment">// All good.
-        </span><span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), Vec&lt;Vec&lt;f64&gt;&gt;, f64&gt; =
+        </span><span class="kw">let </span>state: IterState&lt;Vec&lt;f64&gt;, Vec&lt;f64&gt;, (), Vec&lt;Vec&lt;f64&gt;&gt;, (), f64&gt; =
             IterState::new().gradient(grad.clone()).hessian(hessian);
         <span class="kw">let </span>problem = TestProblem::new();
         <span class="kw">let </span>(<span class="kw-2">mut </span>state_out, kv) = sh.init(<span class="kw-2">&amp;mut </span>Problem::new(problem), state).unwrap();

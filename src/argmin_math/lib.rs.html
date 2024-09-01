@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `argmin-math/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="argmin_math" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/argmin-math/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="argmin_math" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -317,47 +317,7 @@
 <a href="#317" id="317">317</a>
 <a href="#318" id="318">318</a>
 <a href="#319" id="319">319</a>
-<a href="#320" id="320">320</a>
-<a href="#321" id="321">321</a>
-<a href="#322" id="322">322</a>
-<a href="#323" id="323">323</a>
-<a href="#324" id="324">324</a>
-<a href="#325" id="325">325</a>
-<a href="#326" id="326">326</a>
-<a href="#327" id="327">327</a>
-<a href="#328" id="328">328</a>
-<a href="#329" id="329">329</a>
-<a href="#330" id="330">330</a>
-<a href="#331" id="331">331</a>
-<a href="#332" id="332">332</a>
-<a href="#333" id="333">333</a>
-<a href="#334" id="334">334</a>
-<a href="#335" id="335">335</a>
-<a href="#336" id="336">336</a>
-<a href="#337" id="337">337</a>
-<a href="#338" id="338">338</a>
-<a href="#339" id="339">339</a>
-<a href="#340" id="340">340</a>
-<a href="#341" id="341">341</a>
-<a href="#342" id="342">342</a>
-<a href="#343" id="343">343</a>
-<a href="#344" id="344">344</a>
-<a href="#345" id="345">345</a>
-<a href="#346" id="346">346</a>
-<a href="#347" id="347">347</a>
-<a href="#348" id="348">348</a>
-<a href="#349" id="349">349</a>
-<a href="#350" id="350">350</a>
-<a href="#351" id="351">351</a>
-<a href="#352" id="352">352</a>
-<a href="#353" id="353">353</a>
-<a href="#354" id="354">354</a>
-<a href="#355" id="355">355</a>
-<a href="#356" id="356">356</a>
-<a href="#357" id="357">357</a>
-<a href="#358" id="358">358</a>
-<a href="#359" id="359">359</a>
-</pre></div><pre class="rust"><code><span class="comment">// Copyright 2018-2022 argmin developers
+</pre></div><pre class="rust"><code><span class="comment">// Copyright 2018-2024 argmin developers
 //
 // Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
 // http://apache.org/licenses/LICENSE-2.0&gt; or the MIT license &lt;LICENSE-MIT or
@@ -378,7 +338,7 @@
 //!
 //! ```toml
 //! [dependencies]
-</span><span class="attr">#![doc = <span class="macro">concat!</span>(<span class="string">&quot;argmin-math = \&quot;&quot;</span>, <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>), <span class="string">&quot;\&quot;&quot;</span>)]
+</span><span class="attr">#![doc = <span class="macro">concat!</span>(<span class="string">"argmin-math = \""</span>, <span class="macro">env!</span>(<span class="string">"CARGO_PKG_VERSION"</span>), <span class="string">"\""</span>)]
 </span><span class="doccomment">//! ```
 //!
 //! This will activate the `primitives` and `vec` features. For other backends see the section
@@ -402,20 +362,10 @@
 //! |---------------------------------|---------|--------------------------------------------------------------------|
 //! | `ndarray_latest`                | no      | latest supported version                                           |
 //! | `ndarray_latest-nolinalg`       | no      | latest supported version without `ndarray-linalg`                  |
-//! | `ndarray_latest-serde`          | no      | latest supported version + serde support                           |
-//! | `ndarray_latest-nolinalg-serde` | no      | latest supported version without `ndarray-linalg` + serde support  |
 //! | `ndarray_v0_15`                 | no      | version 0.15 with ndarray-linalg 0.16                              |
 //! | `ndarray_v0_15-nolinalg`        | no      | version 0.15 without `ndarray-linalg`                              |
-//! | `ndarray_v0_15-serde`           | no      | version 0.15 with ndarray-linalg 0.16 + serde support              |
-//! | `ndarray_v0_15-nolinalg-serde`  | no      | version 0.15 without `ndarray-linalg` + serde support              |
-//! | `ndarray_v0_14`                 | no      | version 0.14 with ndarray-linalg 0.13                              |
 //! | `ndarray_v0_14-nolinalg`        | no      | version 0.14 without `ndarray-linalg`                              |
-//! | `ndarray_v0_14-serde`           | no      | version 0.14 with ndarray-linalg 0.13 + serde support              |
-//! | `ndarray_v0_14-nolinalg-serde`  | no      | version 0.14 without `ndarray-linalg` + serde support              |
-//! | `ndarray_v0_13`                 | no      | version 0.13 with ndarray-linalg 0.12                              |
 //! | `ndarray_v0_13-nolinalg`        | no      | version 0.13 without `ndarray-linalg`                              |
-//! | `ndarray_v0_13-serde`           | no      | version 0.13 with ndarray-linalg 0.12 + serde support              |
-//! | `ndarray_v0_13-nolinalg-serde`  | no      | version 0.13 without `ndarray-linalg` + serde support              |
 //!
 //! Note that the `*-nolinalg*` features do NOT pull in `ndarray-linalg` as a dependency. This
 //! avoids linking against a BLAS library. This will however disable the implementation of
@@ -429,7 +379,7 @@
 //! for details](https://github.com/rust-ndarray/ndarray-linalg)):
 //!
 //! ```toml
-//! ndarray-linalg = { version = &quot;&lt;appropriate_version&gt;&quot;, features = [&quot;&lt;linalg_backend&gt;&quot;] }
+//! ndarray-linalg = { version = "&lt;appropriate_version&gt;", features = ["&lt;linalg_backend&gt;"] }
 //! ```
 //!
 //! ### `nalgebra`
@@ -437,15 +387,10 @@
 //! | Feature                | Default | Comment                                  |
 //! |------------------------|---------|------------------------------------------|
 //! | `nalgebra_latest`      | no      | latest supported version                 |
-//! | `nalgebra_latest-serde`| no      | latest supported version + serde support |
 //! | `nalgebra_v0_32`       | no      | version 0.32                             |
-//! | `nalgebra_v0_32-serde` | no      | version 0.32 + serde support             |
 //! | `nalgebra_v0_31`       | no      | version 0.31                             |
-//! | `nalgebra_v0_31-serde` | no      | version 0.31 + serde support             |
 //! | `nalgebra_v0_30`       | no      | version 0.30                             |
-//! | `nalgebra_v0_30-serde` | no      | version 0.30 + serde support             |
 //! | `nalgebra_v0_29`       | no      | version 0.29                             |
-//! | `nalgebra_v0_29-serde` | no      | version 0.29 + serde support             |
 //!
 //!
 //! ## Choosing a backend
@@ -455,10 +400,6 @@
 //! The features labeled `*latest*` are an alias for the most recent supported version of the
 //! respective backend. It is however recommended to explicitly specify the desired version instead
 //! of using any of the `*latest*` features (see section about semantic versioning below).
-//!
-//! Note that `argmin` by default compiles with `serde` support. Therefore, unless `serde` is
-//! deliberately turned off in `argmin`, it is necessary to activate the `serde` support in
-//! `argmin-math` as well.
 //!
 //! The default features `primitives` and `vec` can be turned off in order to only compile the
 //! trait definitions. If another backend is chosen, `primitives` will automatically be turned on
@@ -470,7 +411,7 @@
 //!
 //! ```toml
 //! [dependencies]
-</span><span class="attr">#![doc = <span class="macro">concat!</span>(<span class="string">&quot;argmin-math = { version = \&quot;&quot;</span>, <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>), <span class="string">&quot;\&quot;, features = [\&quot;ndarray_latest-serde\&quot;] }&quot;</span>)]
+</span><span class="attr">#![doc = <span class="macro">concat!</span>(<span class="string">"argmin-math = { version = \""</span>, <span class="macro">env!</span>(<span class="string">"CARGO_PKG_VERSION"</span>), <span class="string">"\", features = [\"ndarray_latest\"] }"</span>)]
 </span><span class="doccomment">//! ```
 //!
 //! # Semantic versioning
@@ -479,24 +420,6 @@
 //! not considered a breaking change. However, your code may still break if you use any of the
 //! features containing `*latest*`. It is therefore recommended to specify the actual version of the
 //! backend you are using.
-//!
-//! # Development
-//!
-//! For development and running the tests a backend for `ndarray-linalg` must be chosen. Normally
-//! one would add those as dev dependencies (the features would then be unified with the regular
-//! dependencies). However, linking somehow fails when the non-dev `ndarra-linalg` dependency is
-//! missing (which is the case for the `*-nolinalg*` features of the ndarray backend). To fix that,
-//! the `_dev_linalg_*` features were introduced. When testing and developing with one of the
-//! ndarray features with linalg support on, the appropriate `_dev_linalg_*` feature must be turned
-//! on as well. Note that the version number in `_dev_linalg_*` is always one below the `ndarray`
-//! version. For instance, for ndarray 0.15, one would use the `_dev_linalg_0_14` feature.
-//!
-//! | Development Feature   | Comment                                      |
-//! |-----------------------|----------------------------------------------|
-//! | `_dev_linalg_latest`  | latest `ndarray-linalg` for latest `ndarray` |
-//! | `_dev_linalg_0_16`    | `ndarray-linalg` v0.16 for `ndarray` v0.15   |
-//! | `_dev_linalg_0_13`    | `ndarray-linalg` v0.13 for `ndarray` v0.14   |
-//! | `_dev_linalg_0_12`    | `ndarray-linalg` v0.12 for `ndarray` v0.13   |
 //!
 //! # Contributing
 //!
@@ -526,74 +449,71 @@
 // this is just to make sure that it will always stay this way.)
 </span><span class="attr">#![deny(clippy::float_cmp)]
 
-</span><span class="macro">cfg_if::cfg_if! </span>{
-    <span class="kw">if </span><span class="attr">#[cfg(feature = <span class="string">&quot;nalgebra_0_32&quot;</span>)] </span>{
+</span><span class="macro">cfg_if::cfg_if!</span> {
+    <span class="kw">if </span><span class="attr">#[cfg(feature = <span class="string">"nalgebra_0_32"</span>)] </span>{
         <span class="kw">extern crate </span>nalgebra_0_32 <span class="kw">as </span>nalgebra;
-    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">&quot;nalgebra_0_31&quot;</span>)] </span>{
+    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">"nalgebra_0_31"</span>)] </span>{
         <span class="kw">extern crate </span>nalgebra_0_31 <span class="kw">as </span>nalgebra;
-    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">&quot;nalgebra_0_30&quot;</span>)] </span>{
+    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">"nalgebra_0_30"</span>)] </span>{
         <span class="kw">extern crate </span>nalgebra_0_30 <span class="kw">as </span>nalgebra;
-    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">&quot;nalgebra_0_29&quot;</span>)] </span>{
+    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">"nalgebra_0_29"</span>)] </span>{
         <span class="kw">extern crate </span>nalgebra_0_29 <span class="kw">as </span>nalgebra;
     }
 }
 
-<span class="macro">cfg_if::cfg_if! </span>{
-    <span class="kw">if </span><span class="attr">#[cfg(feature = <span class="string">&quot;ndarray_0_15&quot;</span>)] </span>{
+<span class="macro">cfg_if::cfg_if!</span> {
+    <span class="kw">if </span><span class="attr">#[cfg(feature = <span class="string">"ndarray_0_15"</span>)] </span>{
         <span class="kw">extern crate </span>ndarray_0_15 <span class="kw">as </span>ndarray;
-    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">&quot;ndarray_0_14&quot;</span>)]  </span>{
+    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">"ndarray_0_14"</span>)]  </span>{
         <span class="kw">extern crate </span>ndarray_0_14 <span class="kw">as </span>ndarray;
-    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">&quot;ndarray_0_13&quot;</span>)]  </span>{
+    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">"ndarray_0_13"</span>)]  </span>{
         <span class="kw">extern crate </span>ndarray_0_13 <span class="kw">as </span>ndarray;
     }
 }
 
-<span class="macro">cfg_if::cfg_if! </span>{
-    <span class="kw">if </span><span class="attr">#[cfg(feature = <span class="string">&quot;ndarray-linalg_0_16&quot;</span>)] </span>{
+<span class="macro">cfg_if::cfg_if!</span> {
+    <span class="kw">if </span><span class="attr">#[cfg(feature = <span class="string">"ndarray-linalg_0_16"</span>)] </span>{
         <span class="kw">extern crate </span>ndarray_linalg_0_16 <span class="kw">as </span>ndarray_linalg;
-    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">&quot;ndarray-linalg_0_13&quot;</span>)] </span>{
-        <span class="kw">extern crate </span>ndarray_linalg_0_13 <span class="kw">as </span>ndarray_linalg;
-    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">&quot;ndarray-linalg_0_12&quot;</span>)] </span>{
-        <span class="kw">extern crate </span>ndarray_linalg_0_12 <span class="kw">as </span>ndarray_linalg;
     }
 }
 
-<span class="macro">cfg_if::cfg_if! </span>{
-    <span class="kw">if </span><span class="attr">#[cfg(feature = <span class="string">&quot;num-complex_0_2&quot;</span>)] </span>{
+<span class="macro">cfg_if::cfg_if!</span> {
+    <span class="kw">if </span><span class="attr">#[cfg(feature = <span class="string">"num-complex_0_2"</span>)] </span>{
         <span class="kw">extern crate </span>num_complex_0_2 <span class="kw">as </span>num_complex;
-    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">&quot;num-complex_0_3&quot;</span>)] </span>{
+    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">"num-complex_0_3"</span>)] </span>{
         <span class="kw">extern crate </span>num_complex_0_3 <span class="kw">as </span>num_complex;
-    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">&quot;num-complex_0_4&quot;</span>)] </span>{
+    } <span class="kw">else if </span><span class="attr">#[cfg(feature = <span class="string">"num-complex_0_4"</span>)] </span>{
         <span class="kw">extern crate </span>num_complex_0_4 <span class="kw">as </span>num_complex;
     }
 }
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;primitives&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"primitives"</span>)]
 </span><span class="kw">mod </span>primitives;
-<span class="attr">#[cfg(feature = <span class="string">&quot;primitives&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"primitives"</span>)]
 #[allow(unused_imports)]
 </span><span class="kw">pub use </span><span class="kw">crate</span>::primitives::<span class="kw-2">*</span>;
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;ndarray_all&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"ndarray_all"</span>)]
 </span><span class="kw">mod </span>ndarray_m;
-<span class="attr">#[cfg(feature = <span class="string">&quot;ndarray_all&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"ndarray_all"</span>)]
 #[allow(unused_imports)]
 </span><span class="kw">pub use </span><span class="kw">crate</span>::ndarray_m::<span class="kw-2">*</span>;
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;nalgebra_all&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"nalgebra_all"</span>)]
 </span><span class="kw">mod </span>nalgebra_m;
-<span class="attr">#[cfg(feature = <span class="string">&quot;nalgebra_all&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"nalgebra_all"</span>)]
 #[allow(unused_imports)]
 </span><span class="kw">pub use </span><span class="kw">crate</span>::nalgebra_m::<span class="kw-2">*</span>;
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;vec&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"vec"</span>)]
 </span><span class="kw">mod </span>vec;
-<span class="attr">#[cfg(feature = <span class="string">&quot;vec&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">"vec"</span>)]
 #[allow(unused_imports)]
 </span><span class="kw">pub use </span><span class="kw">crate</span>::vec::<span class="kw-2">*</span>;
 
-<span class="kw">use </span>anyhow::Error;
-<span class="kw">use </span>rand::Rng;
+<span class="comment">// Re-export of types appearing in the api as recommended here: https://www.lurklurk.org/effective-rust/re-export.html
+</span><span class="kw">pub use </span>anyhow::Error;
+<span class="kw">pub use </span>rand::Rng;
 
 <span class="doccomment">/// Dot/scalar product of `T` and `self`
 </span><span class="kw">pub trait </span>ArgminDot&lt;T, U&gt; {

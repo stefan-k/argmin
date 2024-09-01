@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `argmin/src/core/observers/mod.rs`."><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="argmin" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0 (82e1608df 2023-12-21)" data-channel="1.75.0" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-9dd44ab47b99a0fb.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/argmin/src/core/observers/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="argmin" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../../src-files.js"></script><script defer src="../../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -443,17 +443,7 @@
 <a href="#443" id="443">443</a>
 <a href="#444" id="444">444</a>
 <a href="#445" id="445">445</a>
-<a href="#446" id="446">446</a>
-<a href="#447" id="447">447</a>
-<a href="#448" id="448">448</a>
-<a href="#449" id="449">449</a>
-<a href="#450" id="450">450</a>
-<a href="#451" id="451">451</a>
-<a href="#452" id="452">452</a>
-<a href="#453" id="453">453</a>
-<a href="#454" id="454">454</a>
-<a href="#455" id="455">455</a>
-</pre></div><pre class="rust"><code><span class="comment">// Copyright 2018-2022 argmin developers
+</pre></div><pre class="rust"><code><span class="comment">// Copyright 2018-2024 argmin developers
 //
 // Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
 // http://apache.org/licenses/LICENSE-2.0&gt; or the MIT license &lt;LICENSE-MIT or
@@ -467,13 +457,11 @@
 //! iteration number, cost values and many more as well as solver-specific metrics. This interface
 //! can be used to implement loggers, send the information to a storage or to plot metrics.
 //!
-//! The observer [`WriteToFile`](`crate::core::observers::WriteToFile`) saves the parameter vector
-//! to disk and as such requires the parameter vector to be serializable. Hence this feature is
-//! only available with the `serde1` feature.
+//! The observer `ParamWriter` saves the parameter vector to disk. It is distributed via the
+//! `argmin-observer-paramwriter` crate.
 //!
-//! The observer [`SlogLogger`](`crate::core::observers::SlogLogger`) logs the progress of the
-//! optimization to screen or to disk. This requires the `slog-logger` feature. Writing to disk
-//! in addition requires the `serde1` feature.
+//! The observer `SlogLogger` logs the progress of the optimization to screen or to disk.
+//! It can be found in the `argmin-observer-slog` crate.
 //!
 //! For each observer it can be defined how often it will observe the progress of the solver. This
 //! is indicated via the enum `ObserverMode` which can be either `Always`, `Never`, `NewBest`
@@ -489,18 +477,13 @@
 //! # extern crate argmin;
 //! # extern crate argmin_testfunctions;
 //! # use argmin::core::{Error, Executor, CostFunction, Gradient, observers::ObserverMode};
-//! # #[cfg(feature = &quot;slog-logger&quot;)]
-//! # use argmin::core::observers::SlogLogger;
-//! # #[cfg(feature = &quot;serde1&quot;)]
-//! # use argmin::core::observers::{WriteToFile, WriteToFileSerializer};
+//! # use argmin_observer_slog::SlogLogger;
+//! # use argmin_observer_paramwriter::{ParamWriter, ParamWriterFormat};
 //! # use argmin::solver::gradientdescent::SteepestDescent;
 //! # use argmin::solver::linesearch::MoreThuenteLineSearch;
-//! # use argmin_testfunctions::{rosenbrock_2d, rosenbrock_2d_derivative};
+//! # use argmin_testfunctions::{rosenbrock, rosenbrock_derivative};
 //! #
-//! # struct Rosenbrock {
-//! #     a: f64,
-//! #     b: f64,
-//! # }
+//! # struct Rosenbrock {}
 //! #
 //! # /// Implement `CostFunction` for `Rosenbrock`
 //! # impl CostFunction for Rosenbrock {
@@ -511,7 +494,7 @@
 //! #
 //! #     /// Apply the cost function to a parameter `p`
 //! #     fn cost(&amp;self, p: &amp;Self::Param) -&gt; Result&lt;Self::Output, Error&gt; {
-//! #         Ok(rosenbrock_2d(p, 1.0, 100.0))
+//! #         Ok(rosenbrock(p))
 //! #     }
 //! # }
 //! #
@@ -524,14 +507,14 @@
 //! #
 //! #     /// Compute the gradient at parameter `p`.
 //! #     fn gradient(&amp;self, p: &amp;Self::Param) -&gt; Result&lt;Self::Gradient, Error&gt; {
-//! #         Ok(rosenbrock_2d_derivative(p, 1.0, 100.0))
+//! #         Ok(rosenbrock_derivative(p))
 //! #     }
 //! # }
 //! #
 //! # fn run() -&gt; Result&lt;(), Error&gt; {
 //! #
 //! # // Define cost function (must implement `CostFunction` and `Gradient`)
-//! # let problem = Rosenbrock { a: 1.0, b: 100.0 };
+//! # let problem = Rosenbrock { };
 //! #
 //! # // Define initial parameter vector
 //! # let init_param: Vec&lt;f64&gt; = vec![-1.2, 1.0];
@@ -547,19 +530,12 @@
 //! let res = Executor::new(problem, solver)
 //!     .configure(|config| config.param(init_param).max_iters(2))
 //! # ;
-//! # #[cfg(feature = &quot;slog-logger&quot;)]
 //! # let res = res
 //!     // Add an observer which will log all iterations to the terminal (without blocking)
 //!     .add_observer(SlogLogger::term_noblock(), ObserverMode::Always)
-//! # ;
-//! # #[cfg(feature = &quot;serde1&quot;)]
-//! # #[cfg(feature = &quot;slog-logger&quot;)]
-//! # let res = res
-//!     // Log to file whenever a new best solution is found
-//!     .add_observer(SlogLogger::file(&quot;solver.log&quot;, false)?, ObserverMode::NewBest)
 //!     // Write parameter vector to `params/param.arg` every 20th iteration
 //!     .add_observer(
-//!         WriteToFile::new(&quot;params&quot;, &quot;param&quot;, WriteToFileSerializer::JSON),
+//!         ParamWriter::new("params", "param", ParamWriterFormat::JSON),
 //!         ObserverMode::Every(20)
 //!     )
 //! # ;
@@ -573,23 +549,14 @@
 //! #
 //! # fn main() {
 //! #     if let Err(ref e) = run() {
-//! #         println!(&quot;{}&quot;, e);
+//! #         println!("{}", e);
 //! #         std::process::exit(1);
 //! #     }
 //! # }
 //! ```
 
-</span><span class="attr">#[cfg(feature = <span class="string">&quot;serde1&quot;</span>)]
-</span><span class="kw">pub mod </span>file;
-<span class="attr">#[cfg(feature = <span class="string">&quot;slog-logger&quot;</span>)]
-</span><span class="kw">pub mod </span>slog_logger;
-
-<span class="attr">#[cfg(feature = <span class="string">&quot;serde1&quot;</span>)]
-</span><span class="kw">pub use </span>file::<span class="kw-2">*</span>;
-<span class="attr">#[cfg(feature = <span class="string">&quot;serde1&quot;</span>)]
+</span><span class="attr">#[cfg(feature = <span class="string">"serde1"</span>)]
 </span><span class="kw">use </span>serde::{Deserialize, Serialize};
-<span class="attr">#[cfg(feature = <span class="string">&quot;slog-logger&quot;</span>)]
-</span><span class="kw">pub use </span>slog_logger::<span class="kw-2">*</span>;
 
 <span class="kw">use </span><span class="kw">crate</span>::core::{Error, State, KV};
 <span class="kw">use </span>std::default::Default;
@@ -611,7 +578,7 @@
 ///     // implement, offers a range of methods which can be useful.
 ///     I: State,
 /// {
-///     fn observe_init(&amp;mut self, name: &amp;str, kv: &amp;KV) -&gt; Result&lt;(), Error&gt; {
+///     fn observe_init(&amp;mut self, name: &amp;str, state: &amp;I, kv: &amp;KV) -&gt; Result&lt;(), Error&gt; {
 ///         // Do something with `name` and/or `kv`
 ///         // Is executed after initialization of a solver
 ///         Ok(())
@@ -627,9 +594,9 @@
 </span><span class="kw">pub trait </span>Observe&lt;I&gt; {
     <span class="doccomment">/// Called once after initialization of the solver.
     ///
-    /// Has access to the name of the solver via `name` and to a key-value store `kv` with entries
-    /// specific for each solver.
-    </span><span class="kw">fn </span>observe_init(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _name: <span class="kw-2">&amp;</span>str, _kv: <span class="kw-2">&amp;</span>KV) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+    /// Has access to the name of the solver via `name`, the initial `state` and to a key-value
+    /// store `kv` with settings of the solver.
+    </span><span class="kw">fn </span>observe_init(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _name: <span class="kw-2">&amp;</span>str, _state: <span class="kw-2">&amp;</span>I, _kv: <span class="kw-2">&amp;</span>KV) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -639,6 +606,14 @@
     /// [`State`](`crate::core::State`)) and to a key-value store `kv` with entries specific for
     /// each solver.
     </span><span class="kw">fn </span>observe_iter(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _state: <span class="kw-2">&amp;</span>I, _kv: <span class="kw-2">&amp;</span>KV) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Called at the end of a solver run
+    ///
+    /// Has access to the final `state` of the solver (which always implements
+    /// [`State`](`crate::core::State`)).
+    </span><span class="kw">fn </span>observe_final(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _state: <span class="kw-2">&amp;</span>I) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="prelude-val">Ok</span>(())
     }
 }
@@ -665,7 +640,7 @@
     /// use argmin::core::observers::Observers;
     /// use argmin::core::IterState;
     ///
-    /// let observers: Observers&lt;IterState&lt;Vec&lt;f64&gt;, (), (), (), f64&gt;&gt; = Observers::new();
+    /// let observers: Observers&lt;IterState&lt;Vec&lt;f64&gt;, (), (), (), (), f64&gt;&gt; = Observers::new();
     /// # assert!(observers.is_empty());
     /// ```
     </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
@@ -678,20 +653,16 @@
     ///
     /// ```
     /// use argmin::core::observers::{Observers, ObserverMode};
-    /// # #[cfg(feature = &quot;slog-logger&quot;)]
-    /// use argmin::core::observers::SlogLogger;
+    /// use argmin_observer_slog::SlogLogger;
     /// use argmin::core::IterState;
     ///
-    /// let mut observers: Observers&lt;IterState&lt;Vec&lt;f64&gt;, (), (), (), f64&gt;&gt; = Observers::new();
+    /// let mut observers: Observers&lt;IterState&lt;Vec&lt;f64&gt;, (), (), (), (), f64&gt;&gt; = Observers::new();
     ///
-    /// # #[cfg(feature = &quot;slog-logger&quot;)]
     /// let logger = SlogLogger::term();
-    /// # #[cfg(feature = &quot;slog-logger&quot;)]
     /// observers.push(logger, ObserverMode::Always);
-    /// # #[cfg(feature = &quot;slog-logger&quot;)]
     /// # assert!(!observers.is_empty());
     /// ```
-    </span><span class="kw">pub fn </span>push&lt;OBS: Observe&lt;I&gt; + <span class="lifetime">&#39;static</span>&gt;(
+    </span><span class="kw">pub fn </span>push&lt;OBS: Observe&lt;I&gt; + <span class="lifetime">'static</span>&gt;(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         observer: OBS,
         mode: ObserverMode,
@@ -708,7 +679,7 @@
     /// use argmin::core::observers::Observers;
     /// use argmin::core::IterState;
     ///
-    /// let observers: Observers&lt;IterState&lt;Vec&lt;f64&gt;, (), (), (), f64&gt;&gt; = Observers::new();
+    /// let observers: Observers&lt;IterState&lt;Vec&lt;f64&gt;, (), (), (), (), f64&gt;&gt; = Observers::new();
     /// assert!(observers.is_empty());
     /// ```
     </span><span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -721,9 +692,9 @@
 /// are met and calls the actual observers if required.
 </span><span class="kw">impl</span>&lt;I: State&gt; Observe&lt;I&gt; <span class="kw">for </span>Observers&lt;I&gt; {
     <span class="doccomment">/// After initialization of the solver, this loops over all stored observers and calls them.
-    </span><span class="kw">fn </span>observe_init(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str, kv: <span class="kw-2">&amp;</span>KV) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+    </span><span class="kw">fn </span>observe_init(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str, state: <span class="kw-2">&amp;</span>I, kv: <span class="kw-2">&amp;</span>KV) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="kw">for </span>l <span class="kw">in </span><span class="self">self</span>.observers.iter() {
-            l.<span class="number">0</span>.lock().unwrap().observe_init(name, kv)<span class="question-mark">?
+            l.<span class="number">0</span>.lock().unwrap().observe_init(name, state, kv)<span class="question-mark">?
         </span>}
         <span class="prelude-val">Ok</span>(())
     }
@@ -745,6 +716,14 @@
         </span>}
         <span class="prelude-val">Ok</span>(())
     }
+
+    <span class="doccomment">/// Called at the end of a solver run. Loops over all stored observers and calls `observe_final`
+    </span><span class="kw">fn </span>observe_final(<span class="kw-2">&amp;mut </span><span class="self">self</span>, state: <span class="kw-2">&amp;</span>I) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+        <span class="kw">for </span>l <span class="kw">in </span><span class="self">self</span>.observers.iter() {
+            l.<span class="number">0</span>.lock().unwrap().observe_final(state)<span class="question-mark">?
+        </span>}
+        <span class="prelude-val">Ok</span>(())
+    }
 }
 
 <span class="doccomment">/// Indicates when to call an observer.
@@ -753,7 +732,7 @@
 /// iterations, `NewBest` calls the observer only when a new best parameter vector is found and
 /// `Never` deactivates the observer.
 </span><span class="attr">#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-#[cfg_attr(feature = <span class="string">&quot;serde1&quot;</span>, derive(Serialize, Deserialize))]
+#[cfg_attr(feature = <span class="string">"serde1"</span>, derive(Serialize, Deserialize))]
 </span><span class="kw">pub enum </span>ObserverMode {
     <span class="doccomment">/// Never call the observer
     </span>Never,
@@ -804,7 +783,7 @@
         }
 
         <span class="kw">impl</span>&lt;I&gt; Observe&lt;I&gt; <span class="kw">for </span>TestObs {
-            <span class="kw">fn </span>observe_init(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str, _kv: <span class="kw-2">&amp;</span>KV) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+            <span class="kw">fn </span>observe_init(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str, _state: <span class="kw-2">&amp;</span>I, _kv: <span class="kw-2">&amp;</span>KV) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
                 <span class="self">self</span>.data.lock().unwrap().solver_name = name.into();
                 <span class="self">self</span>.data.lock().unwrap().init_called += <span class="number">1</span>;
                 <span class="prelude-val">Ok</span>(())
@@ -838,7 +817,7 @@
 
         <span class="kw">let </span>storages = [test_stor_1, test_stor_2, test_stor_3, test_stor_4];
 
-        <span class="kw">type </span>TState = IterState&lt;Vec&lt;f64&gt;, (), (), (), f64&gt;;
+        <span class="kw">type </span>TState = IterState&lt;Vec&lt;f64&gt;, (), (), (), (), f64&gt;;
 
         <span class="kw">let </span><span class="kw-2">mut </span>obs: Observers&lt;TState&gt; = Observers::new();
         obs.push(test_obs_1, ObserverMode::Never)
@@ -846,17 +825,18 @@
             .push(test_obs_3, ObserverMode::Every(<span class="number">3</span>))
             .push(test_obs_4, ObserverMode::NewBest);
 
-        obs.observe_init(<span class="string">&quot;test_solver&quot;</span>, <span class="kw-2">&amp;</span><span class="macro">kv!</span>()).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>state: TState = IterState::new();
+
+        obs.observe_init(<span class="string">"test_solver"</span>, <span class="kw-2">&amp;</span>state, <span class="kw-2">&amp;</span><span class="macro">kv!</span>()).unwrap();
 
         <span class="comment">// all `init_called` should be 1, all `iter_called` 0
         </span><span class="kw">for </span>s <span class="kw">in </span>storages.iter() {
             <span class="kw">let </span>observer = s.lock().unwrap();
-            <span class="macro">assert_eq!</span>(observer.solver_name, <span class="string">&quot;test_solver&quot;</span>);
+            <span class="macro">assert_eq!</span>(observer.solver_name, <span class="string">"test_solver"</span>);
             <span class="macro">assert_eq!</span>(observer.init_called, <span class="number">1</span>);
             <span class="macro">assert_eq!</span>(observer.iter_called, <span class="number">0</span>);
         }
 
-        <span class="kw">let </span><span class="kw-2">mut </span>state: TState = IterState::new();
         obs.observe_iter(<span class="kw-2">&amp;</span>state, <span class="kw-2">&amp;</span><span class="macro">kv!</span>()).unwrap();
 
         <span class="macro">assert_eq!</span>(storages[<span class="number">0</span>].lock().unwrap().init_called, <span class="number">1</span>);
@@ -894,7 +874,7 @@
         <span class="macro">assert_eq!</span>(storages[<span class="number">3</span>].lock().unwrap().iter_called, <span class="number">1</span>);
 
         state.increment_iter();
-        <span class="comment">// &quot;new best found&quot;
+        <span class="comment">// "new best found"
         </span>state.last_best_iter = state.iter;
         obs.observe_iter(<span class="kw-2">&amp;</span>state, <span class="kw-2">&amp;</span><span class="macro">kv!</span>()).unwrap();
 
